@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>သီတင်းကျွတ် အလှူတော်စာရင်း</title>
-    <!-- Supabase JS Library ချိတ်ဆက်ခြင်း -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         body { 
@@ -33,6 +32,7 @@
         .details { display: flex; flex-direction: column; }
         .name { font-weight: bold; font-size: 1.1em; color: #333; }
         .amount { color: #2e7d32; font-weight: bold; font-size: 1.1em; }
+        .error-msg { color: red; font-size: 0.9em; margin-top: 20px; word-break: break-all; }
     </style>
 </head>
 <body>
@@ -40,7 +40,6 @@
     <h2>🏮 သီတင်းကျွတ် အလှူတော်စာရင်း 🏮</h2>
     <p class="subtitle">ပါဝင်လှူဒါန်းကြသော ကုသိုလ်ရှင်များ</p>
 
-    <!-- Data များ ပေါ်လာမည့် နေရာ -->
     <div id="donations-list">
         <p>စာရင်းများ ရယူနေပါသည်...</p>
     </div>
@@ -49,41 +48,51 @@
         const SUPABASE_URL = 'https://oqulntrmixnlgbkkryhk.supabase.co';
         const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9xdWxudHJtaXhubGdia2tyeWhrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTE1MDcyMDcsImV4cCI6MjEwNzA4MzIwN30.t-BNmpxLySUBG052Tmisnc-FcXv6BEIyVBpU-R_rDeo';
 
-        // Error မတက်အောင် Variable နာမည်ကို dbClient ဟု ပြင်ဆင်ထားပါသည်
         const dbClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
         async function loadDonations() {
-            const { data, error } = await dbClient
-                .from('donations')
-                .select('*')
-                .order('created_at', { ascending: false });
+            try {
+                const { data, error } = await dbClient
+                    .from('donations')
+                    .select('*')
+                    .order('created_at', { ascending: false });
 
-            const listDiv = document.getElementById('donations-list');
-            listDiv.innerHTML = ''; 
+                const listDiv = document.getElementById('donations-list');
+                listDiv.innerHTML = ''; 
 
-            if (error) {
-                listDiv.innerHTML = '<p style="color:red;">ချိတ်ဆက်မှု အမှားအယွင်းဖြစ်နေပါသည်။</p>';
-                console.error("Supabase Error:", error);
-                return;
-            }
+                if (error) {
+                    listDiv.innerHTML = `
+                        <p style="color:red; font-weight:bold;">ချိတ်ဆက်မှု အမှားအယွင်းဖြစ်နေပါသည်။</p>
+                        <p class="error-msg">Error Details: ${error.message} (Code: ${error.code})</p>
+                    `;
+                    console.error("Supabase Error:", error);
+                    return;
+                }
 
-            if (!data || data.length === 0) {
-                listDiv.innerHTML = '<p>အလှူရှင်စာရင်း မရှိသေးပါ။</p>';
-                return;
-            }
+                if (!data || data.length === 0) {
+                    listDiv.innerHTML = '<p>အလှူရှင်စာရင်း မရှိသေးပါ။</p>';
+                    return;
+                }
 
-            data.forEach(donation => {
-                const item = document.createElement('div');
-                item.className = 'donation-box';
-                item.innerHTML = `
-                    <div class="lantern">🏮</div>
-                    <div class="details">
-                        <span class="name">${donation.name}</span>
-                        <span class="amount">${donation.amount}</span>
-                    </div>
+                data.forEach(donation => {
+                    const item = document.createElement('div');
+                    item.className = 'donation-box';
+                    item.innerHTML = `
+                        <div class="lantern">🏮</div>
+                        <div class="details">
+                            <span class="name">${donation.name}</span>
+                            <span class="amount">${donation.amount}</span>
+                        </div>
+                    `;
+                    listDiv.appendChild(item);
+                });
+            } catch (err) {
+                const listDiv = document.getElementById('donations-list');
+                listDiv.innerHTML = `
+                    <p style="color:red; font-weight:bold;">System Error</p>
+                    <p class="error-msg">${err.message}</p>
                 `;
-                listDiv.appendChild(item);
-            });
+            }
         }
 
         loadDonations();
