@@ -45,19 +45,13 @@
 
         /* --- Dashboard Stats --- */
         .container { max-width: 600px; margin: 0 auto; padding: 0 15px 50px; z-index: 10; position: relative; }
-        .stats-row { display: flex; gap: 15px; margin-bottom: 15px; }
+        .stats-row { display: flex; gap: 15px; margin-bottom: 25px; }
         .stat-card {
             flex: 1; background: rgba(30, 15, 60, 0.7); border: 1px solid rgba(255, 170, 0, 0.3);
             border-radius: 15px; padding: 20px; text-align: center; box-shadow: 0 4px 15px rgba(0,0,0,0.3);
         }
         .stat-value { font-size: 1.8em; font-weight: bold; color: #ffdf00; margin-bottom: 5px; }
         .stat-label { color: #aaa; font-size: 0.9em; }
-
-        /* --- Progress Bar --- */
-        .progress-card { background: rgba(30, 15, 60, 0.7); border: 1px solid rgba(255, 170, 0, 0.3); border-radius: 15px; padding: 20px; margin-bottom: 25px; }
-        .progress-header { display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 0.9em; }
-        .progress-bar-bg { background: #331a55; height: 12px; border-radius: 6px; overflow: hidden; }
-        .progress-bar-fill { background: linear-gradient(90deg, #ff8800, #ffdf00); height: 100%; width: 0%; transition: width 1s ease; }
 
         /* --- Top 3 Donors --- */
         .top-donors-row { display: flex; align-items: flex-end; justify-content: center; gap: 10px; margin-bottom: 30px; height: 180px; }
@@ -112,17 +106,6 @@
             </div>
         </div>
 
-        <!-- Progress Bar -->
-        <div class="progress-card">
-            <div class="progress-header">
-                <span>🎯 ရည်မှန်းချက်</span>
-                <span id="progress-text">0 / 1,000,000 (0%)</span>
-            </div>
-            <div class="progress-bar-bg">
-                <div class="progress-bar-fill" id="progress-fill"></div>
-            </div>
-        </div>
-
         <!-- Top 3 Donors -->
         <div class="top-donors-row" id="top-3-container">
             <!-- Rendered by JS -->
@@ -143,7 +126,6 @@
         const dbClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
         let allDonations = [];
-        const TARGET_AMOUNT = 1000000; // ရည်မှန်းချက် သိန်း ၁၀ (ပြောင်းလဲနိုင်ပါသည်)
 
         // Generate Background Lanterns
         const lanternContainer = document.getElementById('lanterns');
@@ -178,10 +160,10 @@
                 
                 updateDashboard();
                 renderTop3();
-                renderList(allDonations);
+                filterList(); // Preserve search state when auto-refreshing
 
             } catch (err) {
-                document.getElementById('donations-list').innerHTML = `<p style="color:red; text-align:center;">ချိတ်ဆက်မှု အမှားအယွင်းဖြစ်နေပါသည်။</p>`;
+                console.error("ချိတ်ဆက်မှု အမှားအယွင်းဖြစ်နေပါသည်။");
             }
         }
 
@@ -191,17 +173,15 @@
             
             document.getElementById('total-donors').innerText = totalDonors;
             document.getElementById('total-amount').innerText = totalAmount.toLocaleString();
-
-            const percent = Math.min((totalAmount / TARGET_AMOUNT) * 100, 100).toFixed(1);
-            document.getElementById('progress-text').innerText = `${totalAmount.toLocaleString()} / ${TARGET_AMOUNT.toLocaleString()} (${percent}%)`;
-            document.getElementById('progress-fill').style.width = `${percent}%`;
         }
 
         function renderTop3() {
             const container = document.getElementById('top-3-container');
             if (allDonations.length < 3) {
-                container.style.display = 'none'; // လှူသူ ၃ ယောက်မပြည့်သေးရင် ဖျောက်ထားမည်
+                container.style.display = 'none'; 
                 return;
+            } else {
+                container.style.display = 'flex';
             }
             
             // Reordering for display: Rank 2, Rank 1, Rank 3
@@ -244,7 +224,12 @@
             renderList(filtered);
         }
 
+        // စတင်သည့်အချိန်တွင် တစ်ကြိမ်ဆွဲယူမည်
         loadDonations();
+
+        // ၃ စက္ကန့် (3000 ms) တစ်ခါ နောက်ကွယ်မှ Data အသစ်ဆွဲယူရန် Auto-fetch
+        // မှတ်ချက်: လူဝင်များလာပါက Database Limit ပြည့်လွယ်သဖြင့် 3000 အစား 10000 (၁၀ စက္ကန့်) သို့ ပြောင်းသုံးရန် အကြံပြုပါသည်။
+        setInterval(loadDonations, 3000);
     </script>
 </body>
 </html>
