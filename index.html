@@ -46,24 +46,25 @@
     </div>
 
     <script>
-        // (အရေးကြီး) အောက်ပါနေရာ ၂ ခုတွင် သင့်ရဲ့ URL နှင့် Key ကို အစားထိုးထည့်ပါ
+        // ပြင်ဆင်ပြီးသား URL နှင့် Key
         const SUPABASE_URL = 'https://oqulntrmixnlgbkkryhk.supabase.co';
         const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9xdWxudHJtaXhubGdia2tyeWhrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTE1MDcyMDcsImV4cCI6MjEwNzA4MzIwN30.t-BNmpxLySUBG052Tmisnc-FcXv6BEIyVBpU-R_rDeo';
 
         const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
         async function loadDonations() {
-            // Database ထဲမှ Data များ လှမ်းယူခြင်း (နောက်ဆုံးသွင်းထားသည်များကို အပေါ်ဆုံးမှ ပြရန် order သုံးထားပါသည်)
+            // Database ထဲမှ Data များ လှမ်းယူခြင်း
             const { data, error } = await supabase
                 .from('donations')
                 .select('*')
                 .order('created_at', { ascending: false });
 
             const listDiv = document.getElementById('donations-list');
-            listDiv.innerHTML = ''; // "စာရင်းများ ရယူနေပါသည်" စာသားကို ဖျက်ရန်
+            listDiv.innerHTML = ''; 
 
             if (error) {
                 listDiv.innerHTML = '<p style="color:red;">ချိတ်ဆက်မှု အမှားအယွင်းဖြစ်နေပါသည်။</p>';
+                console.error("Supabase Error:", error);
                 return;
             }
 
@@ -72,7 +73,7 @@
                 return;
             }
 
-            // Data တစ်ခုချင်းစီအတွက် မီးပုံးဒီဇိုင်းလေးဖြင့် HTML ဖန်တီးခြင်း
+            // Data တစ်ခုချင်းစီအတွက် မီးပုံးဒီဇိုင်းဖြင့် HTML ဖန်တီးခြင်း
             data.forEach(donation => {
                 const item = document.createElement('div');
                 item.className = 'donation-box';
@@ -87,7 +88,6 @@
             });
         }
 
-        // Website ပွင့်သည်နှင့် Data ယူမည့် function ကို အလိုအလျောက် အလုပ်လုပ်စေခြင်း
         loadDonations();
     </script>
 </body>
