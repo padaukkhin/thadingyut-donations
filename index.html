@@ -6,67 +6,242 @@
     <title>သီတင်းကျွတ် အလှူတော်စာရင်း</title>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
-        body { font-family: 'Pyidaungsu', sans-serif; background-color: #fff3e0; text-align: center; padding: 20px; }
-        h2 { color: #d32f2f; margin-bottom: 5px; }
-        .subtitle { color: #555; margin-bottom: 20px; }
-        .donation-box { background: white; margin: 10px auto; padding: 15px; max-width: 350px; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); border-left: 5px solid #d32f2f; text-align: left; display: flex; align-items: center; gap: 15px; }
-        .lantern { font-size: 2em; }
-        .details { display: flex; flex-direction: column; }
-        .name { font-weight: bold; font-size: 1.1em; color: #333; }
-        .amount { color: #2e7d32; font-weight: bold; font-size: 1.1em; }
-        .error-msg { color: red; font-size: 0.9em; margin-top: 20px; word-break: break-all; }
+        @import url('https://fonts.googleapis.com/css2?family=Padauk:wght@400;700&display=swap');
+        
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        
+        body { 
+            font-family: 'Padauk', 'Pyidaungsu', sans-serif; 
+            background: linear-gradient(135deg, #13062b, #200f40); 
+            color: #fff; 
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* --- Floating Lanterns Animation --- */
+        .lantern-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: -1; overflow: hidden; }
+        .lantern-bg {
+            position: absolute; bottom: -100px; width: 40px; height: 50px;
+            background: radial-gradient(circle, #ffaa00, #ff5500);
+            border-radius: 20px; box-shadow: 0 0 20px #ff7700;
+            animation: floatUp linear infinite; opacity: 0.6;
+        }
+        .lantern-bg::after { content: ''; position: absolute; bottom: -10px; left: 18px; width: 4px; height: 15px; background: #ffaa00; }
+        @keyframes floatUp {
+            0% { transform: translateY(0) scale(0.8) rotate(0deg); opacity: 0.8; }
+            100% { transform: translateY(-120vh) scale(1.2) rotate(20deg); opacity: 0; }
+        }
+
+        /* --- Header & Typography --- */
+        .header { text-align: center; padding: 40px 20px 20px; z-index: 10; position: relative; }
+        .title-small { color: #ff9800; font-size: 1.2em; margin-bottom: 5px; }
+        .title-main { 
+            font-size: 2em; font-weight: bold; color: #ffdf00;
+            text-shadow: 0 0 10px rgba(255,223,0,0.8), 0 0 20px rgba(255,100,0,0.6);
+            margin-bottom: 15px; line-height: 1.4;
+        }
+        .subtitle { color: #ccc; font-size: 1em; }
+
+        /* --- Dashboard Stats --- */
+        .container { max-width: 600px; margin: 0 auto; padding: 0 15px 50px; z-index: 10; position: relative; }
+        .stats-row { display: flex; gap: 15px; margin-bottom: 15px; }
+        .stat-card {
+            flex: 1; background: rgba(30, 15, 60, 0.7); border: 1px solid rgba(255, 170, 0, 0.3);
+            border-radius: 15px; padding: 20px; text-align: center; box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        }
+        .stat-value { font-size: 1.8em; font-weight: bold; color: #ffdf00; margin-bottom: 5px; }
+        .stat-label { color: #aaa; font-size: 0.9em; }
+
+        /* --- Progress Bar --- */
+        .progress-card { background: rgba(30, 15, 60, 0.7); border: 1px solid rgba(255, 170, 0, 0.3); border-radius: 15px; padding: 20px; margin-bottom: 25px; }
+        .progress-header { display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 0.9em; }
+        .progress-bar-bg { background: #331a55; height: 12px; border-radius: 6px; overflow: hidden; }
+        .progress-bar-fill { background: linear-gradient(90deg, #ff8800, #ffdf00); height: 100%; width: 0%; transition: width 1s ease; }
+
+        /* --- Top 3 Donors --- */
+        .top-donors-row { display: flex; align-items: flex-end; justify-content: center; gap: 10px; margin-bottom: 30px; height: 180px; }
+        .top-card {
+            background: rgba(30, 15, 60, 0.7); border: 1px solid rgba(255, 170, 0, 0.4);
+            border-radius: 15px; padding: 15px 5px; text-align: center; flex: 1; box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+        }
+        .rank-1 { height: 160px; border-color: #ffdf00; background: rgba(50, 30, 90, 0.8); }
+        .rank-2, .rank-3 { height: 130px; }
+        .medal { font-size: 2em; margin-bottom: 5px; }
+        .top-name { font-size: 0.9em; font-weight: bold; margin-bottom: 5px; }
+        .top-amount { color: #ffdf00; font-weight: bold; }
+
+        /* --- Search & List --- */
+        .search-box {
+            width: 100%; padding: 12px 20px; border-radius: 25px; border: 1px solid rgba(255, 170, 0, 0.3);
+            background: rgba(30, 15, 60, 0.7); color: #fff; font-size: 1em; margin-bottom: 20px; outline: none;
+        }
+        .search-box::placeholder { color: #888; }
+        .list-item {
+            background: rgba(30, 15, 60, 0.7); border: 1px solid rgba(255, 170, 0, 0.2);
+            border-radius: 12px; padding: 15px; margin-bottom: 10px; display: flex; align-items: center; gap: 15px;
+        }
+        .rank-circle { width: 35px; height: 35px; background: #ffaa00; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; color: #000; }
+        .item-details { flex-grow: 1; }
+        .item-name { font-size: 1.1em; font-weight: bold; margin-bottom: 3px; }
+        .item-amount { color: #ffdf00; font-weight: bold; font-size: 1.1em; }
     </style>
 </head>
 <body>
 
-    <h2>🏮 သီတင်းကျွတ် အလှူတော်စာရင်း 🏮</h2>
-    <p class="subtitle">ပါဝင်လှူဒါန်းကြသော ကုသိုလ်ရှင်များ</p>
+    <!-- Animated Lanterns Background -->
+    <div class="lantern-container" id="lanterns"></div>
 
-    <div id="donations-list">
-        <p>စာရင်းများ ရယူနေပါသည်...</p>
+    <div class="header">
+        <p class="title-small">🏮 သီတင်းကျွတ် မီးထွန်းပွဲတော် 🏮</p>
+        <h1 class="title-main">သီတင်းကျွတ် အလှူတော်စာရင်း</h1>
+        <p class="subtitle">ပါဝင်လှူဒါန်းကြသော ကုသိုလ်ရှင်များအားလုံးကို ကျေးဇူးအထူးတင်ပါသည် 🙏</p>
+    </div>
+
+    <div class="container">
+        <!-- Dashboard Stats -->
+        <div class="stats-row">
+            <div class="stat-card">
+                <div class="stat-value" id="total-amount">0</div>
+                <div class="stat-label">စုစုပေါင်း (ကျပ်)</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="total-donors">0</div>
+                <div class="stat-label">အလှူရှင် (ဦး)</div>
+            </div>
+        </div>
+
+        <!-- Progress Bar -->
+        <div class="progress-card">
+            <div class="progress-header">
+                <span>🎯 ရည်မှန်းချက်</span>
+                <span id="progress-text">0 / 1,000,000 (0%)</span>
+            </div>
+            <div class="progress-bar-bg">
+                <div class="progress-bar-fill" id="progress-fill"></div>
+            </div>
+        </div>
+
+        <!-- Top 3 Donors -->
+        <div class="top-donors-row" id="top-3-container">
+            <!-- Rendered by JS -->
+        </div>
+
+        <!-- Search Box -->
+        <input type="text" class="search-box" id="search-input" placeholder="🔍 အမည်ရှာရန်..." onkeyup="filterList()">
+
+        <!-- Donor List -->
+        <div id="donations-list">
+            <p style="text-align: center; color: #888;">စာရင်းများ ရယူနေပါသည်...</p>
+        </div>
     </div>
 
     <script>
         const SUPABASE_URL = 'https://oqulntrmixnlgbkkryhk.supabase.co';
         const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9xdWxudHJtaXhubGdia2tyeWhrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTE1MDcyMDcsImV4cCI6MjEwNzA4MzIwN30.t-BNmpxLySUBG052Tmisnc-FcXv6BEIyVBpU-R_rDeo';
-
         const dbClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+        let allDonations = [];
+        const TARGET_AMOUNT = 1000000; // ရည်မှန်းချက် သိန်း ၁၀ (ပြောင်းလဲနိုင်ပါသည်)
+
+        // Generate Background Lanterns
+        const lanternContainer = document.getElementById('lanterns');
+        for(let i=0; i<15; i++) {
+            let lantern = document.createElement('div');
+            lantern.className = 'lantern-bg';
+            lantern.style.left = Math.random() * 100 + 'vw';
+            lantern.style.animationDuration = (Math.random() * 10 + 10) + 's';
+            lantern.style.animationDelay = (Math.random() * 10) + 's';
+            lantern.style.transform = `scale(${Math.random() * 0.5 + 0.5})`;
+            lanternContainer.appendChild(lantern);
+        }
+
+        // Parse Myanmar numbers to English integers for calculation
+        function parseAmount(amountStr) {
+            const mmNumbers = { '၀':0, '၁':1, '၂':2, '၃':3, '၄':4, '၅':5, '၆':6, '၇':7, '၈':8, '၉':9 };
+            let str = String(amountStr).replace(/[၀-၉]/g, m => mmNumbers[m]);
+            str = str.replace(/[^0-9]/g, '');
+            return parseInt(str, 10) || 0;
+        }
 
         async function loadDonations() {
             try {
-                const { data, error } = await dbClient
-                    .from('donations')
-                    .select('*')
-                    .order('created_at', { ascending: false });
-
-                const listDiv = document.getElementById('donations-list');
+                const { data, error } = await dbClient.from('donations').select('*');
+                if (error) throw error;
                 
-                if (error) {
-                    listDiv.innerHTML = `<p style="color:red; font-weight:bold;">Error: ${error.message} (Code: ${error.code})</p>`;
-                    return;
-                }
+                // Add parsed numeric value for sorting
+                allDonations = data.map(d => ({ ...d, numericAmount: parseAmount(d.amount) }));
+                
+                // Sort by highest amount
+                allDonations.sort((a, b) => b.numericAmount - a.numericAmount);
+                
+                updateDashboard();
+                renderTop3();
+                renderList(allDonations);
 
-                if (!data || data.length === 0) {
-                    listDiv.innerHTML = '<p>အလှူရှင်စာရင်း မရှိသေးပါ။</p>';
-                    return;
-                }
-
-                listDiv.innerHTML = ''; 
-                data.forEach(donation => {
-                    const item = document.createElement('div');
-                    item.className = 'donation-box';
-                    item.innerHTML = `
-                        <div class="lantern">🏮</div>
-                        <div class="details">
-                            <span class="name">${donation.name}</span>
-                            <span class="amount">${donation.amount}</span>
-                        </div>
-                    `;
-                    listDiv.appendChild(item);
-                });
             } catch (err) {
-                document.getElementById('donations-list').innerHTML = `<p style="color:red; font-weight:bold;">System Error: ${err.message}</p>`;
+                document.getElementById('donations-list').innerHTML = `<p style="color:red; text-align:center;">ချိတ်ဆက်မှု အမှားအယွင်းဖြစ်နေပါသည်။</p>`;
             }
+        }
+
+        function updateDashboard() {
+            const totalDonors = allDonations.length;
+            const totalAmount = allDonations.reduce((sum, d) => sum + d.numericAmount, 0);
+            
+            document.getElementById('total-donors').innerText = totalDonors;
+            document.getElementById('total-amount').innerText = totalAmount.toLocaleString();
+
+            const percent = Math.min((totalAmount / TARGET_AMOUNT) * 100, 100).toFixed(1);
+            document.getElementById('progress-text').innerText = `${totalAmount.toLocaleString()} / ${TARGET_AMOUNT.toLocaleString()} (${percent}%)`;
+            document.getElementById('progress-fill').style.width = `${percent}%`;
+        }
+
+        function renderTop3() {
+            const container = document.getElementById('top-3-container');
+            if (allDonations.length < 3) {
+                container.style.display = 'none'; // လှူသူ ၃ ယောက်မပြည့်သေးရင် ဖျောက်ထားမည်
+                return;
+            }
+            
+            // Reordering for display: Rank 2, Rank 1, Rank 3
+            const top3 = [
+                { data: allDonations[1], rank: 2, medal: '🥈', cls: 'rank-2' },
+                { data: allDonations[0], rank: 1, medal: '🥇', cls: 'rank-1' },
+                { data: allDonations[2], rank: 3, medal: '🥉', cls: 'rank-3' }
+            ];
+
+            container.innerHTML = top3.map(t => `
+                <div class="top-card ${t.cls}">
+                    <div class="medal">${t.medal}</div>
+                    <div class="top-name">${t.data.name}</div>
+                    <div class="top-amount">${t.data.numericAmount.toLocaleString()}</div>
+                </div>
+            `).join('');
+        }
+
+        function renderList(list) {
+            const listDiv = document.getElementById('donations-list');
+            if (list.length === 0) {
+                listDiv.innerHTML = '<p style="text-align:center; color:#888;">စာရင်း မတွေ့ပါ။</p>';
+                return;
+            }
+
+            listDiv.innerHTML = list.map((donation, index) => `
+                <div class="list-item">
+                    <div class="rank-circle">${index + 1}</div>
+                    <div class="item-details">
+                        <div class="item-name">${donation.name}</div>
+                        <div class="item-amount">${donation.numericAmount.toLocaleString()} ကျပ်</div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function filterList() {
+            const query = document.getElementById('search-input').value.toLowerCase();
+            const filtered = allDonations.filter(d => d.name.toLowerCase().includes(query));
+            renderList(filtered);
         }
 
         loadDonations();
