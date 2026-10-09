@@ -4,93 +4,91 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>သီတင်းကျွတ် အလှူတော်စာရင်း</title>
-    <!-- Tailwind CSS (Design အတွက်) -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Supabase JS (Database ချိတ်ရန်) -->
+    <!-- Supabase JS Library ချိတ်ဆက်ခြင်း -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    
     <style>
-        body { background-color: #1a0b00; color: #ffedd5; }
-        .glow-text { text-shadow: 0 0 10px #f59e0b, 0 0 20px #f59e0b; }
-        .card { 
-            background: linear-gradient(145deg, #3a1c00, #1f0d00); 
-            border: 1px solid #78350f; 
-            animation: fadeIn 0.5s ease-in;
+        body { 
+            font-family: 'Pyidaungsu', sans-serif; 
+            background-color: #fff3e0; 
+            text-align: center; 
+            padding: 20px; 
         }
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
+        h2 { color: #d32f2f; margin-bottom: 5px; }
+        .subtitle { color: #555; margin-bottom: 20px; }
+        
+        .donation-box { 
+            background: white; 
+            margin: 10px auto; 
+            padding: 15px; 
+            max-width: 350px; 
+            border-radius: 10px; 
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1); 
+            border-left: 5px solid #d32f2f; 
+            text-align: left; 
+            display: flex;
+            align-items: center;
+            gap: 15px;
         }
+        .lantern { font-size: 2em; }
+        .details { display: flex; flex-direction: column; }
+        .name { font-weight: bold; font-size: 1.1em; color: #333; }
+        .amount { color: #2e7d32; font-weight: bold; font-size: 1.1em; }
     </style>
 </head>
-<body class="p-5 font-sans min-h-screen">
-    <div class="max-w-2xl mx-auto mt-10">
-        <!-- ခေါင်းစဉ် -->
-        <h1 class="text-3xl md:text-4xl text-center font-bold text-yellow-500 mb-10 glow-text">
-            🪔 သီတင်းကျွတ် အလှူတော်စာရင်း 🪔
-        </h1>
-        
-        <!-- စာရင်းများ ပေါ်လာမည့် နေရာ -->
-        <div id="donation-list" class="space-y-4">
-            <p class="text-center text-yellow-700 animate-pulse">စာရင်းများ ရယူနေပါသည်...</p>
-        </div>
+<body>
+
+    <h2>🏮 သီတင်းကျွတ် အလှူတော်စာရင်း 🏮</h2>
+    <p class="subtitle">ပါဝင်လှူဒါန်းကြသော ကုသိုလ်ရှင်များ</p>
+
+    <!-- Data များ ပေါ်လာမည့် နေရာ -->
+    <div id="donations-list">
+        <p>စာရင်းများ ရယူနေပါသည်...</p>
     </div>
 
     <script>
-        // အောက်ပါ နေရာ (၂) ခုတွင် စောစောက မှတ်ထားသော URL နှင့် Key ကို အစားထိုးထည့်ပါ
-        const SUPABASE_URL = 'https://oqulntrmixnlgbkkryhk.supabase.co/rest/v1/'; 
-        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9xdWxudHJtaXhubGdia2tyeWhrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTE1MDcyMDcsImV4cCI6MjEwNzA4MzIwN30.t-BNmpxLySUBG052Tmisnc-FcXv6BEIyVBpU-R_rDeo';
+        // (အရေးကြီး) အောက်ပါနေရာ ၂ ခုတွင် သင့်ရဲ့ URL နှင့် Key ကို အစားထိုးထည့်ပါ
+        const SUPABASE_URL = 'https://oqulntrmixnlgbkkryhk.supabase.co';
+        const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9xdWxudHJtaXhubGdia2tyeWhrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTE1MDcyMDcsImV4cCI6MjEwNzA4MzIwN30.t-BNmpxLySUBG052Tmisnc-FcXv6BEIyVBpU-R_rDeo';
 
-        // Supabase ချိတ်ဆက်ခြင်း
-        const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-        const listDiv = document.getElementById('donation-list');
+        const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-        // Database မှ စာရင်းများကို ဆွဲယူသည့် Function
-        async function fetchDonations() {
+        async function loadDonations() {
+            // Database ထဲမှ Data များ လှမ်းယူခြင်း (နောက်ဆုံးသွင်းထားသည်များကို အပေါ်ဆုံးမှ ပြရန် order သုံးထားပါသည်)
             const { data, error } = await supabase
                 .from('donations')
                 .select('*')
-                .order('created_at', { ascending: false }); // နောက်ဆုံးလှူသူကို အပေါ်ဆုံးမှာပြရန်
+                .order('created_at', { ascending: false });
+
+            const listDiv = document.getElementById('donations-list');
+            listDiv.innerHTML = ''; // "စာရင်းများ ရယူနေပါသည်" စာသားကို ဖျက်ရန်
 
             if (error) {
-                console.error('Error fetching data:', error);
-                listDiv.innerHTML = '<p class="text-center text-red-500">ချိတ်ဆက်မှု အမှားအယွင်းဖြစ်နေပါသည်</p>';
+                listDiv.innerHTML = '<p style="color:red;">ချိတ်ဆက်မှု အမှားအယွင်းဖြစ်နေပါသည်။</p>';
                 return;
             }
 
-            listDiv.innerHTML = ''; // အဟောင်းများကို ရှင်းထုတ်ခြင်း
-
-            if(data.length === 0) {
-                 listDiv.innerHTML = '<p class="text-center text-yellow-700">အလှူရှင်စာရင်း မရှိသေးပါ။</p>';
-                 return;
+            if (data.length === 0) {
+                listDiv.innerHTML = '<p>အလှူရှင်စာရင်း မရှိသေးပါ။</p>';
+                return;
             }
 
-            // ဒေတာတစ်ခုချင်းစီကို Card ပုံစံဖြင့် ပြသခြင်း
+            // Data တစ်ခုချင်းစီအတွက် မီးပုံးဒီဇိုင်းလေးဖြင့် HTML ဖန်တီးခြင်း
             data.forEach(donation => {
-                const card = document.createElement('div');
-                card.className = 'card p-4 rounded-lg shadow-lg flex justify-between items-center transform transition duration-500 hover:scale-105';
-                card.innerHTML = `
-                    <div class="flex items-center space-x-3">
-                        <span class="text-2xl">🏮</span>
-                        <span class="text-xl font-semibold text-orange-200">${donation.name}</span>
-                    </div>
-                    <div class="text-lg font-bold text-yellow-400 glow-text">
-                        ${donation.amount}
+                const item = document.createElement('div');
+                item.className = 'donation-box';
+                item.innerHTML = `
+                    <div class="lantern">🏮</div>
+                    <div class="details">
+                        <span class="name">${donation.name}</span>
+                        <span class="amount">${donation.amount}</span>
                     </div>
                 `;
-                listDiv.appendChild(card);
+                listDiv.appendChild(item);
             });
         }
 
-        // ဝက်ဘ်ဆိုက် စဖွင့်သည်နှင့် စာရင်းများကို ရယူခြင်း
-        fetchDonations();
-
-        // Real-time Update (စာရင်းအသစ်ဝင်လာပါက Auto ပြောင်းလဲပေးခြင်း)
-        supabase.channel('public:donations')
-            .on('postgres_changes', { event: '*', schema: 'public', table: 'donations' }, payload => {
-                fetchDonations(); // အသစ်ဝင်လာပါက စာရင်းပြန်ဆွဲယူရန်
-            })
-            .subscribe();
+        // Website ပွင့်သည်နှင့် Data ယူမည့် function ကို အလိုအလျောက် အလုပ်လုပ်စေခြင်း
+        loadDonations();
     </script>
 </body>
 </html>
