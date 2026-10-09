@@ -46,15 +46,14 @@
     </div>
 
     <script>
-        // ပြင်ဆင်ပြီးသား URL နှင့် Key
         const SUPABASE_URL = 'https://oqulntrmixnlgbkkryhk.supabase.co';
         const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9xdWxudHJtaXhubGdia2tyeWhrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTE1MDcyMDcsImV4cCI6MjEwNzA4MzIwN30.t-BNmpxLySUBG052Tmisnc-FcXv6BEIyVBpU-R_rDeo';
 
-        const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+        // Error မတက်အောင် Variable နာမည်ကို dbClient ဟု ပြင်ဆင်ထားပါသည်
+        const dbClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
         async function loadDonations() {
-            // Database ထဲမှ Data များ လှမ်းယူခြင်း
-            const { data, error } = await supabase
+            const { data, error } = await dbClient
                 .from('donations')
                 .select('*')
                 .order('created_at', { ascending: false });
@@ -68,12 +67,11 @@
                 return;
             }
 
-            if (data.length === 0) {
+            if (!data || data.length === 0) {
                 listDiv.innerHTML = '<p>အလှူရှင်စာရင်း မရှိသေးပါ။</p>';
                 return;
             }
 
-            // Data တစ်ခုချင်းစီအတွက် မီးပုံးဒီဇိုင်းဖြင့် HTML ဖန်တီးခြင်း
             data.forEach(donation => {
                 const item = document.createElement('div');
                 item.className = 'donation-box';
