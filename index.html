@@ -19,6 +19,7 @@
             position: relative;
         }
 
+        /* --- Floating Lanterns Animation --- */
         .lantern-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: -1; overflow: hidden; }
         .lantern-bg {
             position: absolute; bottom: -100px; width: 40px; height: 50px;
@@ -32,6 +33,7 @@
             100% { transform: translateY(-120vh) scale(1.2) rotate(20deg); opacity: 0; }
         }
 
+        /* --- Header & Typography --- */
         .header { text-align: center; padding: 40px 20px 20px; z-index: 10; position: relative; }
         .title-small { color: #ff9800; font-size: 1.2em; margin-bottom: 5px; }
         .title-main { 
@@ -41,6 +43,7 @@
         }
         .subtitle { color: #ccc; font-size: 1em; }
 
+        /* --- Dashboard Stats --- */
         .container { max-width: 600px; margin: 0 auto; padding: 0 15px 50px; z-index: 10; position: relative; }
         .stats-row { display: flex; gap: 15px; margin-bottom: 25px; }
         .stat-card {
@@ -50,6 +53,7 @@
         .stat-value { font-size: 1.8em; font-weight: bold; color: #ffdf00; margin-bottom: 5px; }
         .stat-label { color: #aaa; font-size: 0.9em; }
 
+        /* --- Top 3 Donors --- */
         .top-donors-row { display: flex; align-items: flex-end; justify-content: center; gap: 10px; margin-bottom: 30px; height: 180px; }
         .top-card {
             background: rgba(30, 15, 60, 0.7); border: 1px solid rgba(255, 170, 0, 0.4);
@@ -62,6 +66,7 @@
         .top-name { font-size: 0.9em; font-weight: bold; margin-bottom: 5px; }
         .top-amount { color: #ffdf00; font-weight: bold; }
 
+        /* --- Search & List --- */
         .search-box {
             width: 100%; padding: 12px 20px; border-radius: 25px; border: 1px solid rgba(255, 170, 0, 0.3);
             background: rgba(30, 15, 60, 0.7); color: #fff; font-size: 1em; margin-bottom: 20px; outline: none;
@@ -79,6 +84,7 @@
 </head>
 <body>
 
+    <!-- Animated Lanterns Background -->
     <div class="lantern-container" id="lanterns"></div>
 
     <div class="header">
@@ -88,6 +94,7 @@
     </div>
 
     <div class="container">
+        <!-- Dashboard Stats -->
         <div class="stats-row">
             <div class="stat-card">
                 <div class="stat-value" id="total-amount">0</div>
@@ -99,10 +106,15 @@
             </div>
         </div>
 
-        <div class="top-donors-row" id="top-3-container"></div>
+        <!-- Top 3 Donors -->
+        <div class="top-donors-row" id="top-3-container">
+            <!-- Rendered by JS -->
+        </div>
 
+        <!-- Search Box -->
         <input type="text" class="search-box" id="search-input" placeholder="🔍 အမည်ရှာရန်..." onkeyup="filterList()">
 
+        <!-- Donor List -->
         <div id="donations-list">
             <p style="text-align: center; color: #888;">စာရင်းများ ရယူနေပါသည်...</p>
         </div>
@@ -111,21 +123,11 @@
     <script>
         const SUPABASE_URL = 'https://oqulntrmixnlgbkkryhk.supabase.co';
         const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9xdWxudHJtaXhubGdia2tyeWhrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTE1MDcyMDcsImV4cCI6MjEwNzA4MzIwN30.t-BNmpxLySUBG052Tmisnc-FcXv6BEIyVBpU-R_rDeo';
-        
-        // === VPN ကျော်ရန် Proxy စနစ် ထည့်သွင်းခြင်း ===
-        const myanmarBypassFetch = (url, options) => {
-            // လမ်းကြောင်းပိတ်ထားပါက corsproxy ဖြင့် ရှောင်ကွင်းမည်
-            const proxyUrl = 'https://corsproxy.io/?' + encodeURIComponent(url);
-            return fetch(proxyUrl, options).catch(() => fetch(url, options)); // Proxy အလုပ်မလုပ်ပါက ရိုးရိုးပြန်ချိတ်မည်
-        };
-
-        const dbClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY, {
-            global: { fetch: myanmarBypassFetch }
-        });
-        // ===========================================
+        const dbClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
         let allDonations = [];
 
+        // Generate Background Lanterns
         const lanternContainer = document.getElementById('lanterns');
         for(let i=0; i<15; i++) {
             let lantern = document.createElement('div');
@@ -137,6 +139,7 @@
             lanternContainer.appendChild(lantern);
         }
 
+        // Parse Myanmar numbers to English integers for calculation
         function parseAmount(amountStr) {
             const mmNumbers = { '၀':0, '၁':1, '၂':2, '၃':3, '၄':4, '၅':5, '၆':6, '၇':7, '၈':8, '၉':9 };
             let str = String(amountStr).replace(/[၀-၉]/g, m => mmNumbers[m]);
@@ -149,15 +152,18 @@
                 const { data, error } = await dbClient.from('donations').select('*');
                 if (error) throw error;
                 
+                // Add parsed numeric value for sorting
                 allDonations = data.map(d => ({ ...d, numericAmount: parseAmount(d.amount) }));
+                
+                // Sort by highest amount
                 allDonations.sort((a, b) => b.numericAmount - a.numericAmount);
                 
                 updateDashboard();
                 renderTop3();
-                filterList();
+                filterList(); // Preserve search state when auto-refreshing
 
             } catch (err) {
-                console.error("Data ဆွဲယူရာတွင် အခက်အခဲဖြစ်နေပါသည်။", err);
+                console.error("ချိတ်ဆက်မှု အမှားအယွင်းဖြစ်နေပါသည်။");
             }
         }
 
@@ -178,6 +184,7 @@
                 container.style.display = 'flex';
             }
             
+            // Reordering for display: Rank 2, Rank 1, Rank 3
             const top3 = [
                 { data: allDonations[1], rank: 2, medal: '🥈', cls: 'rank-2' },
                 { data: allDonations[0], rank: 1, medal: '🥇', cls: 'rank-1' },
@@ -217,10 +224,11 @@
             renderList(filtered);
         }
 
+        // စတင်သည့်အချိန်တွင် တစ်ကြိမ်ဆွဲယူမည်
         loadDonations();
-        
-        // Proxy အသုံးပြုထားသဖြင့် Server load မပိစေရန် ၁၀ စက္ကန့်တစ်ခါသာ ဆွဲယူမည် (10000)
-        setInterval(loadDonations, 10000);
+
+        // ၃ စက္ကန့် (3000 ms) တစ်ခါ နောက်ကွယ်မှ Data အသစ်ဆွဲယူရန် Auto-fetch
+        setInterval(loadDonations, 3000);
     </script>
 </body>
 </html>
