@@ -1,176 +1,273 @@
-import telebot
-from supabase import create_client, Client
-import csv
-import io
-
-# === သင့်ရဲ့ Keys များ ===
-BOT_TOKEN = '8648824237:AAF_T1etluKgrwqRzY-4ukRZMZB-Y2TxSKc'
-SUPABASE_URL = 'https://oqulntrmixnlgbkkryhk.supabase.co'
-SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9xdWxudHJtaXhubGdia2tyeWhrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTE1MDcyMDcsImV4cCI6MjEwNzA4MzIwN30.t-BNmpxLySUBG052Tmisnc-FcXv6BEIyVBpU-R_rDeo'
-
-# === 🔒 ခွင့်ပြုထားသော Admin များ၏ Telegram ID ===
-# အောက်ပါ ဂဏန်းနေရာတွင် သင့်ရဲ့ ID ကို ပြောင်းထည့်ပါ။
-ADMIN_IDS = [6371520301] 
-
-# Client ချိတ်ဆက်ခြင်း
-supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
-bot = telebot.TeleBot(BOT_TOKEN)
-
-# === Admin ဟုတ်မဟုတ် စစ်ဆေးသည့် လုပ်ဆောင်ချက် ===
-def is_admin(message):
-    if message.from_user.id not in ADMIN_IDS:
-        bot.reply_to(message, "⛔ တောင်းပန်ပါတယ်။ သင်သည် ဤ Bot ကို အသုံးပြုခွင့် မရှိပါ။ Admin သာလျှင် စာရင်းသွင်း/ဖျက် လုပ်နိုင်ပါသည်။")
-        return False
-    return True
-
-# === /start သို့မဟုတ် /help နှိပ်လျှင် ပြမည့်စာသား ===
-@bot.message_handler(commands=['start', 'help'])
-def send_welcome(message):
-    if not is_admin(message): return
-    welcome_text = (
-        "🙏 ၁၃၈၈ ခုနှစ် သီတင်းကျွတ်ပဝါရဏာ အလှူတော်စာရင်း Bot\n\n"
-        "📝 စာရင်းသွင်းရန်:\nအမည်, လိပ်စာ(မထည့်လည်းရ), ပမာဏ\n\n"
-        "စာကြောင်းများခွဲ၍ အများကြီး တစ်ခါတည်းပို့နိုင်ပါသည်။\n(ဥပမာ -\nကျော်ကျော်, ရေတာရှည်, ၅၀၀၀၀\nမော်မော်, ၅၀၀၀၀)\n\n"
-        "🗑️ တစ်ဦးချင်းဖျက်ရန်: /delete အမည်\n\n"
-        "💣 အားလုံးဖျက်ရန်: /deleteall\n\n"
-        "📊 CSV ဖိုင် (Excel) ရယူရန်: /export"
-    )
-    bot.reply_to(message, welcome_text)
-
-# === CSV ဖိုင် ထုတ်ယူရန် Command ===
-@bot.message_handler(commands=['export'])
-def export_csv(message):
-    if not is_admin(message): return
-    try:
-        bot.reply_to(message, "⏳ ဒေတာများကို ရယူနေပါသည်၊ ခဏစောင့်ပါ...")
+<!DOCTYPE html>
+<html lang="my">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>သီတင်းကျွတ် အလှူတော်စာရင်း</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Padauk:wght@400;700&display=swap');
         
-        response = supabase.table('donations').select('*').execute()
-        data = response.data
+        * { box-sizing: border-box; margin: 0; padding: 0; }
         
-        if not data:
-            bot.reply_to(message, "⚠️ စာရင်းထဲတွင် အချက်အလက် မရှိသေးပါ။")
-            return
-            
-        output = io.StringIO()
-        writer = csv.writer(output)
-        writer.writerow(['စဥ်', 'အလှူရှင်အမည်', 'လှူဒါန်းငွေ']) 
-        
-        for index, row in enumerate(data, 1):
-            writer.writerow([index, row.get('name', ''), row.get('amount', '')])
-            
-        output.seek(0)
-        
-        file_bytes = output.getvalue().encode('utf-8-sig')
-        bio = io.BytesIO(file_bytes)
-        bio.name = 'thadingyut_donations.csv'
-        
-        bot.send_document(message.chat.id, bio, caption="✅ အလှူရှင်စာရင်း CSV ဖိုင် ရယူခြင်း အောင်မြင်ပါသည်။")
-    except Exception as e:
-        bot.reply_to(message, f"⚠️ ချို့ယွင်းချက်ဖြစ်ပေါ်နေပါသည်: {str(e)}")
+        body { 
+            font-family: 'Padauk', 'Pyidaungsu', sans-serif; 
+            background: linear-gradient(135deg, #13062b, #200f40); 
+            color: #fff; 
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
 
-# === စာရင်းအားလုံးဖျက်ရန် သတိပေး Command ===
-@bot.message_handler(commands=['deleteall'])
-def ask_delete_all(message):
-    if not is_admin(message): return
-    msg = bot.reply_to(message, "⚠️ သတိပေးချက်: စာရင်းအားလုံးကို ဖျက်ရန် သေချာပါသလား?\n\nသေချာပါက ဖျက်ရန် လျှို့ဝှက်နံပါတ် (Password) ကို အောက်တွင် ရိုက်ထည့်ပါ။\n(မဖျက်လိုပါက 'cancel' ဟု ရိုက်ထည့်ပါ။)")
-    bot.register_next_step_handler(msg, confirm_delete_all)
+        /* --- Floating Lanterns Animation --- */
+        .lantern-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: -1; overflow: hidden; }
+        .lantern-bg {
+            position: absolute; bottom: -100px; width: 40px; height: 50px;
+            background: radial-gradient(circle, #ffaa00, #ff5500);
+            border-radius: 20px; box-shadow: 0 0 20px #ff7700;
+            animation: floatUp linear infinite; opacity: 0.6;
+        }
+        .lantern-bg::after { content: ''; position: absolute; bottom: -10px; left: 18px; width: 4px; height: 15px; background: #ffaa00; }
+        @keyframes floatUp {
+            0% { transform: translateY(0) scale(0.8) rotate(0deg); opacity: 0.8; }
+            100% { transform: translateY(-120vh) scale(1.2) rotate(20deg); opacity: 0; }
+        }
 
-# === Password စစ်ဆေးပြီး ဖျက်မည့်နေရာ ===
-def confirm_delete_all(message):
-    if not is_admin(message): return
-    if message.text == '199719':
-        try:
-            response = supabase.table('donations').delete().neq('name', 'dummy_12345').execute()
-            bot.reply_to(message, "✅ အလှူရှင်စာရင်း အားလုံးကို အောင်မြင်စွာ ဖျက်ပစ်လိုက်ပါပြီ။")
-        except Exception as e:
-            bot.reply_to(message, f"⚠️ ချို့ယွင်းချက်ဖြစ်ပေါ်နေပါသည်: {str(e)}")
-    elif message.text.lower() == 'cancel':
-        bot.reply_to(message, "❌ ဖျက်သိမ်းခြင်းကို ရပ်ဆိုင်းလိုက်ပါသည်။")
-    else:
-        bot.reply_to(message, "❌ လျှို့ဝှက်နံပါတ် မှားယွင်းနေပါသည်။ ဖျက်သိမ်းခြင်းကို ရပ်ဆိုင်းလိုက်ပါသည်။")
+        /* --- Header & Typography --- */
+        .header { text-align: center; padding: 40px 20px 20px; z-index: 10; position: relative; }
+        
+        /* New Stylish Event Title */
+        .title-event { 
+            color: #ffaa00; 
+            font-size: 1.6em; 
+            font-weight: bold; 
+            margin-bottom: 10px; 
+            text-shadow: 0 0 15px rgba(255, 170, 0, 0.8), 0 0 30px rgba(255, 100, 0, 0.5);
+            line-height: 1.5;
+        }
+        
+        .title-main { 
+            font-size: 2em; font-weight: bold; color: #ffdf00;
+            text-shadow: 0 0 10px rgba(255,223,0,0.8), 0 0 20px rgba(255,100,0,0.6);
+            margin-bottom: 15px; line-height: 1.4;
+        }
+        .subtitle { color: #ccc; font-size: 1em; }
 
-# === စာရင်းဖျက်ရန် Command ===
-@bot.message_handler(commands=['delete'])
-def delete_donation(message):
-    if not is_admin(message): return
-    try:
-        name_to_delete = message.text.replace('/delete', '').strip()
+        /* --- Container & Dashboard Stats --- */
+        .container { max-width: 600px; margin: 0 auto; padding: 0 15px 50px; z-index: 10; position: relative; }
         
-        if name_to_delete == "":
-            bot.reply_to(message, "⚠️ ဖျက်လိုသော အမည်ကို ရိုက်ထည့်ပါ။\n👉 ဥပမာ - /delete ကျော်ကျော် (ရေတာရှည်)")
-            return
-            
-        response = supabase.table('donations').delete().eq('name', name_to_delete).execute()
-        
-        if len(response.data) > 0:
-            bot.reply_to(message, f"✅ '{name_to_delete}' ၏ အလှူငွေစာရင်းကို ပယ်ဖျက်လိုက်ပါပြီ။")
-        else:
-            bot.reply_to(message, f"❌ '{name_to_delete}' အမည်ဖြင့် စာရင်း မတွေ့ပါ။ (လိပ်စာထည့်သွင်းထားပါက ကွင်းစကွင်းပိတ်ဖြင့် အတိအကျ ရိုက်ထည့်ပါ)")
-            
-    except Exception as e:
-        bot.reply_to(message, f"⚠️ ချို့ယွင်းချက်ဖြစ်ပေါ်နေပါသည်: {str(e)}")
+        /* --- Poem Section --- */
+        .poem-card {
+            background: rgba(30, 15, 60, 0.6);
+            border: 1px solid rgba(255, 170, 0, 0.3);
+            border-radius: 15px;
+            padding: 25px 20px;
+            margin-bottom: 30px;
+            text-align: center;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+            line-height: 1.8;
+            position: relative;
+        }
+        .poem-title { color: #ffdf00; font-size: 1.3em; font-weight: bold; margin-bottom: 15px; }
+        .poem-text { color: #e5d9f2; font-size: 1em; margin-bottom: 8px; }
+        .poem-author { color: #ffaa00; text-align: right; font-style: italic; margin-top: 15px; font-size: 0.9em; line-height: 1.4; }
 
-# === စာရင်းသွင်းရန် ===
-@bot.message_handler(func=lambda message: ',' in message.text or '၊' in message.text)
-def add_donation(message):
-    if not is_admin(message): return
-    try:
-        lines = message.text.split('\n')
+        .stats-row { display: flex; gap: 15px; margin-bottom: 25px; }
+        .stat-card {
+            flex: 1; background: rgba(30, 15, 60, 0.7); border: 1px solid rgba(255, 170, 0, 0.3);
+            border-radius: 15px; padding: 20px; text-align: center; box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        }
+        .stat-value { font-size: 1.8em; font-weight: bold; color: #ffdf00; margin-bottom: 5px; }
+        .stat-label { color: #aaa; font-size: 0.9em; }
+
+        /* --- Top 3 Donors --- */
+        .top-donors-row { display: flex; align-items: flex-end; justify-content: center; gap: 10px; margin-bottom: 30px; height: 180px; }
+        .top-card {
+            background: rgba(30, 15, 60, 0.7); border: 1px solid rgba(255, 170, 0, 0.4);
+            border-radius: 15px; padding: 15px 5px; text-align: center; flex: 1; box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+        }
+        .rank-1 { height: 160px; border-color: #ffdf00; background: rgba(50, 30, 90, 0.8); }
+        .rank-2, .rank-3 { height: 130px; }
+        .medal { font-size: 2em; margin-bottom: 5px; }
+        .top-name { font-size: 0.9em; font-weight: bold; margin-bottom: 5px; }
+        .top-amount { color: #ffdf00; font-weight: bold; }
+
+        /* --- Search & List --- */
+        .search-box {
+            width: 100%; padding: 12px 20px; border-radius: 25px; border: 1px solid rgba(255, 170, 0, 0.3);
+            background: rgba(30, 15, 60, 0.7); color: #fff; font-size: 1em; margin-bottom: 20px; outline: none;
+        }
+        .search-box::placeholder { color: #888; }
+        .list-item {
+            background: rgba(30, 15, 60, 0.7); border: 1px solid rgba(255, 170, 0, 0.2);
+            border-radius: 12px; padding: 15px; margin-bottom: 10px; display: flex; align-items: center; gap: 15px;
+        }
+        .rank-circle { width: 35px; height: 35px; background: #ffaa00; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; color: #000; }
+        .item-details { flex-grow: 1; }
+        .item-name { font-size: 1.1em; font-weight: bold; margin-bottom: 3px; }
+        .item-amount { color: #ffdf00; font-weight: bold; font-size: 1.1em; }
+    </style>
+</head>
+<body>
+
+    <!-- Animated Lanterns Background -->
+    <div class="lantern-container" id="lanterns"></div>
+
+    <div class="header">
+        <!-- New Stylish Event Title -->
+        <div class="title-event">🏆 ၁၃၈၈ ခုနှစ် သီတင်းကျွတ်ပဝါရဏာ အားကစားပွဲတော် 🏆</div>
+        <h1 class="title-main">သီတင်းကျွတ် အလှူတော်စာရင်း</h1>
+        <p class="subtitle">ပါဝင်လှူဒါန်းကြသော ကုသိုလ်ရှင်များအားလုံးကို ကျေးဇူးအထူးတင်ပါသည် 🙏</p>
+    </div>
+
+    <div class="container">
         
-        insert_data = []
-        success_list = []
-        error_list = []
-        
-        for line in lines:
-            if not line.strip():  
-                continue
+        <!-- Poem Section -->
+        <div class="poem-card">
+            <div class="poem-title">သီတင်းကျွတ်</div>
+            <div class="poem-text">ဘယ်ရွာမှ မရှိနိုင်ကြတဲ့ နေရာတစ်ခု လူငယ်တစ်စုက ထိန်းသိမ်းနေလေရဲ့...။</div>
+            <div class="poem-text">ခပ်စိမ်းစိမ်းတော့ မကြည့်နဲ့သူငယ်ချင်း ဒီနေရာမှာ ဒို့မိဘတွေလည်းပါခဲ့တယ်..။</div>
+            <div class="poem-text">ဟိုး အတိတ်ကိုပြန်ကြည့်လိုက် မင်းကိုက်ခဲ့တဲ့ မုန့်တခြမ်း လေထဲမှာ ကြိုးတန်းလန်းနဲ့ ။</div>
+            <div class="poem-text">လွမ်းနေမိခဲ့ မနက်စောစော ဆန်ပြုတ်တွေ မုန့်ဖက်ထုပ် ပူပူရေ ဝေးခဲ့တာ ကြာလှပေါ့။</div>
+            <div class="poem-text">ရွာရောမြို့ပါကန် မှားမှား မှန်မှန် ဒိုင်ရဲ့သဘော၊ ငြင်းမနေနဲ့ သူငယ်ချင်း သရက်ပင်ရင်းက ဂိုးတိုင်က ယူကလစ် သားတွေပါ။</div>
+            <div class="poem-text">ပုလင်းဘူးကို ငါးမျှားချင်ရင် ဒီကိုလာ သွားစားစရာ တရွာလုံး မုန့်လုပ်ထားတယ်၊ အုန်းအုန်းကျွက်ကျွက်ဆို ချောတိုင် တက်လို့....။</div>
+            <div class="poem-text">ဒို့မမေ့ဖို့ အမှတ်တရများ ဘုန်းတော်ကြီးကျောင်းမှာ ချိတ်ဆွဲထားတယ်..။</div>
+            <div class="poem-text">မင်းလဲ ငါလဲ<br>ဝေးခဲ့ပေမဲ့ တွေးတွေးရဲ့ လွမ်းနေအုန်းမဲ့ မွေးရပ်ရင်ခွင်<br>ဒို့အားလုံးရဲ့......<br>ပိတောက်ခင်။</div>
+            <div class="poem-author">
+                - ဦးနေဝင်းစိုး<br>
+                (ပိတောက်ခင်)
+            </div>
+        </div>
+
+        <!-- Dashboard Stats -->
+        <div class="stats-row">
+            <div class="stat-card">
+                <div class="stat-value" id="total-amount">0</div>
+                <div class="stat-label">စုစုပေါင်း (ကျပ်)</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="total-donors">0</div>
+                <div class="stat-label">အလှူရှင် (ဦး)</div>
+            </div>
+        </div>
+
+        <!-- Top 3 Donors -->
+        <div class="top-donors-row" id="top-3-container">
+            <!-- Rendered by JS -->
+        </div>
+
+        <!-- Search Box -->
+        <input type="text" class="search-box" id="search-input" placeholder="🔍 အမည်ရှာရန်..." onkeyup="filterList()">
+
+        <!-- Donor List -->
+        <div id="donations-list">
+            <p style="text-align: center; color: #888;">စာရင်းများ ရယူနေပါသည်...</p>
+        </div>
+    </div>
+
+    <script>
+        const SUPABASE_URL = 'https://oqulntrmixnlgbkkryhk.supabase.co';
+        const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9xdWxudHJtaXhubGdia2tyeWhrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTE1MDcyMDcsImV4cCI6MjEwNzA4MzIwN30.t-BNmpxLySUBG052Tmisnc-FcXv6BEIyVBpU-R_rDeo';
+        const dbClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+        let allDonations = [];
+
+        // Generate Background Lanterns
+        const lanternContainer = document.getElementById('lanterns');
+        for(let i=0; i<15; i++) {
+            let lantern = document.createElement('div');
+            lantern.className = 'lantern-bg';
+            lantern.style.left = Math.random() * 100 + 'vw';
+            lantern.style.animationDuration = (Math.random() * 10 + 10) + 's';
+            lantern.style.animationDelay = (Math.random() * 10) + 's';
+            lantern.style.transform = `scale(${Math.random() * 0.5 + 0.5})`;
+            lanternContainer.appendChild(lantern);
+        }
+
+        // Parse Myanmar numbers to English integers for calculation
+        function parseAmount(amountStr) {
+            const mmNumbers = { '၀':0, '၁':1, '၂':2, '၃':3, '၄':4, '၅':5, '၆':6, '၇':7, '၈':8, '၉':9 };
+            let str = String(amountStr).replace(/[၀-၉]/g, m => mmNumbers[m]);
+            str = str.replace(/[^0-9]/g, '');
+            return parseInt(str, 10) || 0;
+        }
+
+        async function loadDonations() {
+            try {
+                const { data, error } = await dbClient.from('donations').select('*');
+                if (error) throw error;
                 
-            text = line.replace('၊', ',')
-            parts = text.split(',')
-            
-            if len(parts) >= 3:
-                name_with_address = f"{parts[0].strip()} ({parts[1].strip()})"
-                amount = parts[2].strip()
+                allDonations = data.map(d => ({ ...d, numericAmount: parseAmount(d.amount) }));
+                allDonations.sort((a, b) => b.numericAmount - a.numericAmount);
                 
-                insert_data.append({"name": name_with_address, "amount": amount})
-                success_list.append(f"✓ {name_with_address} ({amount})")
-                
-            elif len(parts) == 2:
-                name = parts[0].strip()
-                amount = parts[1].strip()
-                
-                insert_data.append({"name": name, "amount": amount})
-                success_list.append(f"✓ {name} ({amount})")
-            else:
-                error_list.append(line)
-        
-        if insert_data:
-            supabase.table('donations').insert(insert_data).execute()
-            
-        reply_msg = ""
-        
-        if success_list:
-            if len(success_list) > 15:
-                reply_msg += f"✅ စာရင်းပေါင်း ({len(success_list)}) ခုကို အောင်မြင်စွာ သွင်းပြီးပါပြီ။\n(အသေးစိတ်ကို Website တွင် ကြည့်ရှုပါ။)"
-            else:
-                reply_msg += "✅ အောက်ပါစာရင်းများ အောင်မြင်စွာ သွင်းပြီးပါပြီ:\n" + "\n".join(success_list)
-                
-        if error_list:
-            if len(error_list) > 15:
-                reply_msg += f"\n\n⚠️ ပုံစံမှားနေသော စာကြောင်း ({len(error_list)}) ကြောင်း ရှိပါသည် (ကော်မာ မပါဝင်ပါ)။"
-            else:
-                reply_msg += "\n\n⚠️ ပုံစံမှားနေသော စာကြောင်းများ (ကော်မာ မပါဝင်ပါ):\n" + "\n".join(error_list)
-            
-        bot.reply_to(message, reply_msg)
-            
-    except Exception as e:
-        bot.reply_to(message, f"⚠️ ချို့ယွင်းချက်ဖြစ်ပေါ်နေပါသည်: {str(e)}")
+                updateDashboard();
+                renderTop3();
+                filterList(); 
 
-# Error မတက်အောင် လွဲမှားရိုက်ထည့်မိသည့် စာများကို လက်ခံမည့်နေရာ
-@bot.message_handler(func=lambda message: True)
-def echo_all(message):
-    if not is_admin(message): return
-    bot.reply_to(message, "⚠️ နားမလည်ပါ။ စာရင်းသွင်းလိုပါက 'အမည်, လိပ်စာ, ငွေပမာဏ' ပုံစံဖြင့် ရိုက်ထည့်ပါ။\n(ဥပမာ - ကျော်ကျော်, ရေတာရှည်, ၅၀၀၀၀)")
+            } catch (err) {
+                console.error("ချိတ်ဆက်မှု အမှားအယွင်းဖြစ်နေပါသည်။");
+            }
+        }
 
-print("Bot is running...")
-bot.infinity_polling()
+        function updateDashboard() {
+            const totalDonors = allDonations.length;
+            const totalAmount = allDonations.reduce((sum, d) => sum + d.numericAmount, 0);
+            
+            document.getElementById('total-donors').innerText = totalDonors;
+            document.getElementById('total-amount').innerText = totalAmount.toLocaleString();
+        }
+
+        function renderTop3() {
+            const container = document.getElementById('top-3-container');
+            if (allDonations.length < 3) {
+                container.style.display = 'none'; 
+                return;
+            } else {
+                container.style.display = 'flex';
+            }
+            
+            const top3 = [
+                { data: allDonations[1], rank: 2, medal: '🥈', cls: 'rank-2' },
+                { data: allDonations[0], rank: 1, medal: '🥇', cls: 'rank-1' },
+                { data: allDonations[2], rank: 3, medal: '🥉', cls: 'rank-3' }
+            ];
+
+            container.innerHTML = top3.map(t => `
+                <div class="top-card ${t.cls}">
+                    <div class="medal">${t.medal}</div>
+                    <div class="top-name">${t.data.name}</div>
+                    <div class="top-amount">${t.data.numericAmount.toLocaleString()}</div>
+                </div>
+            `).join('');
+        }
+
+        function renderList(list) {
+            const listDiv = document.getElementById('donations-list');
+            if (list.length === 0) {
+                listDiv.innerHTML = '<p style="text-align:center; color:#888;">စာရင်း မတွေ့ပါ။</p>';
+                return;
+            }
+
+            listDiv.innerHTML = list.map((donation, index) => `
+                <div class="list-item">
+                    <div class="rank-circle">${index + 1}</div>
+                    <div class="item-details">
+                        <div class="item-name">${donation.name}</div>
+                        <div class="item-amount">${donation.numericAmount.toLocaleString()} ကျပ်</div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function filterList() {
+            const query = document.getElementById('search-input').value.toLowerCase();
+            const filtered = allDonations.filter(d => d.name.toLowerCase().includes(query));
+            renderList(filtered);
+        }
+
+        loadDonations();
+        setInterval(loadDonations, 3000);
+    </script>
+</body>
+</html>
