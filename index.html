@@ -35,8 +35,6 @@
 
         /* --- Header & Typography --- */
         .header { text-align: center; padding: 40px 20px 20px; z-index: 10; position: relative; }
-        
-        /* New Stylish Event Title */
         .title-event { 
             color: #ffaa00; 
             font-size: 1.6em; 
@@ -45,7 +43,6 @@
             text-shadow: 0 0 15px rgba(255, 170, 0, 0.8), 0 0 30px rgba(255, 100, 0, 0.5);
             line-height: 1.5;
         }
-        
         .title-main { 
             font-size: 2em; font-weight: bold; color: #ffdf00;
             text-shadow: 0 0 10px rgba(255,223,0,0.8), 0 0 20px rgba(255,100,0,0.6);
@@ -80,8 +77,10 @@
         .stat-value { font-size: 1.8em; font-weight: bold; color: #ffdf00; margin-bottom: 5px; }
         .stat-label { color: #aaa; font-size: 0.9em; }
 
-        /* --- Top 3 Donors --- */
-        .top-donors-row { display: flex; align-items: flex-end; justify-content: center; gap: 10px; margin-bottom: 30px; height: 180px; }
+        /* --- Top 5 Donors Layout --- */
+        #top-5-container { margin-bottom: 30px; }
+        
+        .top-donors-row { display: flex; align-items: flex-end; justify-content: center; gap: 10px; margin-bottom: 15px; height: 180px; }
         .top-card {
             background: rgba(30, 15, 60, 0.7); border: 1px solid rgba(255, 170, 0, 0.4);
             border-radius: 15px; padding: 15px 5px; text-align: center; flex: 1; box-shadow: 0 4px 15px rgba(0,0,0,0.4);
@@ -92,6 +91,17 @@
         .medal { font-size: 2em; margin-bottom: 5px; }
         .top-name { font-size: 0.9em; font-weight: bold; margin-bottom: 5px; }
         .top-amount { color: #ffdf00; font-weight: bold; }
+
+        .runner-up-row { display: flex; justify-content: center; gap: 10px; }
+        .runner-up-card {
+            background: rgba(30, 15, 60, 0.7); border: 1px solid rgba(255, 170, 0, 0.3);
+            border-radius: 12px; padding: 10px; text-align: center; flex: 1; box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+        }
+        .runner-up-rank {
+            background: #ffaa00; color: #000; width: 26px; height: 26px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 0.9em; margin-bottom: 5px;
+        }
 
         /* --- Search & List --- */
         .search-box {
@@ -111,11 +121,9 @@
 </head>
 <body>
 
-    <!-- Animated Lanterns Background -->
     <div class="lantern-container" id="lanterns"></div>
 
     <div class="header">
-        <!-- New Stylish Event Title -->
         <div class="title-event">🏆 ၁၃၈၈ ခုနှစ် သီတင်းကျွတ်ပဝါရဏာ အားကစားပွဲတော် 🏆</div>
         <h1 class="title-main">သီတင်းကျွတ် အလှူတော်စာရင်း</h1>
         <p class="subtitle">ပါဝင်လှူဒါန်းကြသော ကုသိုလ်ရှင်များအားလုံးကို ကျေးဇူးအထူးတင်ပါသည် 🙏</p>
@@ -123,7 +131,6 @@
 
     <div class="container">
         
-        <!-- Poem Section -->
         <div class="poem-card">
             <div class="poem-title">သီတင်းကျွတ်</div>
             <div class="poem-text">ဘယ်ရွာမှ မရှိနိုင်ကြတဲ့ နေရာတစ်ခု လူငယ်တစ်စုက ထိန်းသိမ်းနေလေရဲ့...။</div>
@@ -140,7 +147,6 @@
             </div>
         </div>
 
-        <!-- Dashboard Stats -->
         <div class="stats-row">
             <div class="stat-card">
                 <div class="stat-value" id="total-amount">0</div>
@@ -152,15 +158,11 @@
             </div>
         </div>
 
-        <!-- Top 3 Donors -->
-        <div class="top-donors-row" id="top-3-container">
-            <!-- Rendered by JS -->
-        </div>
+        <!-- Top 5 Donors Section -->
+        <div id="top-5-container"></div>
 
-        <!-- Search Box -->
         <input type="text" class="search-box" id="search-input" placeholder="🔍 အမည်ရှာရန်..." onkeyup="filterList()">
 
-        <!-- Donor List -->
         <div id="donations-list">
             <p style="text-align: center; color: #888;">စာရင်းများ ရယူနေပါသည်...</p>
         </div>
@@ -173,7 +175,6 @@
 
         let allDonations = [];
 
-        // Generate Background Lanterns
         const lanternContainer = document.getElementById('lanterns');
         for(let i=0; i<15; i++) {
             let lantern = document.createElement('div');
@@ -185,7 +186,6 @@
             lanternContainer.appendChild(lantern);
         }
 
-        // Parse Myanmar numbers to English integers for calculation
         function parseAmount(amountStr) {
             const mmNumbers = { '၀':0, '၁':1, '၂':2, '၃':3, '၄':4, '၅':5, '၆':6, '၇':7, '၈':8, '၉':9 };
             let str = String(amountStr).replace(/[၀-၉]/g, m => mmNumbers[m]);
@@ -202,7 +202,7 @@
                 allDonations.sort((a, b) => b.numericAmount - a.numericAmount);
                 
                 updateDashboard();
-                renderTop3();
+                renderTop5();
                 filterList(); 
 
             } catch (err) {
@@ -218,28 +218,45 @@
             document.getElementById('total-amount').innerText = totalAmount.toLocaleString();
         }
 
-        function renderTop3() {
-            const container = document.getElementById('top-3-container');
+        function renderTop5() {
+            const container = document.getElementById('top-5-container');
             if (allDonations.length < 3) {
-                container.style.display = 'none'; 
+                container.innerHTML = ''; 
                 return;
-            } else {
-                container.style.display = 'flex';
             }
             
+            // Render Top 3 Podium
+            let html = '<div class="top-donors-row">';
             const top3 = [
                 { data: allDonations[1], rank: 2, medal: '🥈', cls: 'rank-2' },
                 { data: allDonations[0], rank: 1, medal: '🥇', cls: 'rank-1' },
                 { data: allDonations[2], rank: 3, medal: '🥉', cls: 'rank-3' }
             ];
-
-            container.innerHTML = top3.map(t => `
+            html += top3.map(t => `
                 <div class="top-card ${t.cls}">
                     <div class="medal">${t.medal}</div>
                     <div class="top-name">${t.data.name}</div>
                     <div class="top-amount">${t.data.numericAmount.toLocaleString()}</div>
                 </div>
             `).join('');
+            html += '</div>';
+
+            // Render Rank 4 and 5 if available
+            if (allDonations.length >= 4) {
+                html += '<div class="runner-up-row">';
+                for(let i = 3; i < Math.min(5, allDonations.length); i++) {
+                    html += `
+                        <div class="runner-up-card">
+                            <div class="runner-up-rank">${i+1}</div>
+                            <div class="top-name">${allDonations[i].name}</div>
+                            <div class="top-amount">${allDonations[i].numericAmount.toLocaleString()}</div>
+                        </div>
+                    `;
+                }
+                html += '</div>';
+            }
+
+            container.innerHTML = html;
         }
 
         function renderList(list) {
@@ -249,15 +266,18 @@
                 return;
             }
 
-            listDiv.innerHTML = list.map((donation, index) => `
+            listDiv.innerHTML = list.map((donation, index) => {
+                const originalIndex = allDonations.findIndex(d => d === donation);
+                return `
                 <div class="list-item">
-                    <div class="rank-circle">${index + 1}</div>
+                    <div class="rank-circle">${originalIndex + 1}</div>
                     <div class="item-details">
                         <div class="item-name">${donation.name}</div>
                         <div class="item-amount">${donation.numericAmount.toLocaleString()} ကျပ်</div>
                     </div>
                 </div>
-            `).join('');
+                `;
+            }).join('');
         }
 
         function filterList() {
