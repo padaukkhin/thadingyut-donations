@@ -77,10 +77,8 @@
         .stat-value { font-size: 1.8em; font-weight: bold; color: #ffdf00; margin-bottom: 5px; }
         .stat-label { color: #aaa; font-size: 0.9em; }
 
-        /* --- Top 5 Donors Layout --- */
-        #top-5-container { margin-bottom: 30px; }
-        
-        .top-donors-row { display: flex; align-items: flex-end; justify-content: center; gap: 10px; margin-bottom: 15px; height: 180px; }
+        /* --- Top 3 Donors Layout --- */
+        .top-donors-row { display: flex; align-items: flex-end; justify-content: center; gap: 10px; margin-bottom: 30px; height: 180px; }
         .top-card {
             background: rgba(30, 15, 60, 0.7); border: 1px solid rgba(255, 170, 0, 0.4);
             border-radius: 15px; padding: 15px 5px; text-align: center; flex: 1; box-shadow: 0 4px 15px rgba(0,0,0,0.4);
@@ -91,17 +89,6 @@
         .medal { font-size: 2em; margin-bottom: 5px; }
         .top-name { font-size: 0.9em; font-weight: bold; margin-bottom: 5px; }
         .top-amount { color: #ffdf00; font-weight: bold; }
-
-        .runner-up-row { display: flex; justify-content: center; gap: 10px; }
-        .runner-up-card {
-            background: rgba(30, 15, 60, 0.7); border: 1px solid rgba(255, 170, 0, 0.3);
-            border-radius: 12px; padding: 10px; text-align: center; flex: 1; box-shadow: 0 4px 15px rgba(0,0,0,0.3);
-            display: flex; flex-direction: column; align-items: center; justify-content: center;
-        }
-        .runner-up-rank {
-            background: #ffaa00; color: #000; width: 26px; height: 26px; border-radius: 50%;
-            display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 0.9em; margin-bottom: 5px;
-        }
 
         /* --- Search & List --- */
         .search-box {
@@ -158,8 +145,8 @@
             </div>
         </div>
 
-        <!-- Top 5 Donors Section -->
-        <div id="top-5-container"></div>
+        <!-- Top 3 Donors Section -->
+        <div class="top-donors-row" id="top-3-container"></div>
 
         <input type="text" class="search-box" id="search-input" placeholder="🔍 အမည်ရှာရန်..." onkeyup="filterList()">
 
@@ -202,7 +189,7 @@
                 allDonations.sort((a, b) => b.numericAmount - a.numericAmount);
                 
                 updateDashboard();
-                renderTop5();
+                renderTop3();
                 filterList(); 
 
             } catch (err) {
@@ -218,45 +205,28 @@
             document.getElementById('total-amount').innerText = totalAmount.toLocaleString();
         }
 
-        function renderTop5() {
-            const container = document.getElementById('top-5-container');
+        function renderTop3() {
+            const container = document.getElementById('top-3-container');
             if (allDonations.length < 3) {
-                container.innerHTML = ''; 
+                container.style.display = 'none'; 
                 return;
+            } else {
+                container.style.display = 'flex';
             }
             
-            // Render Top 3 Podium
-            let html = '<div class="top-donors-row">';
             const top3 = [
                 { data: allDonations[1], rank: 2, medal: '🥈', cls: 'rank-2' },
                 { data: allDonations[0], rank: 1, medal: '🥇', cls: 'rank-1' },
                 { data: allDonations[2], rank: 3, medal: '🥉', cls: 'rank-3' }
             ];
-            html += top3.map(t => `
+
+            container.innerHTML = top3.map(t => `
                 <div class="top-card ${t.cls}">
                     <div class="medal">${t.medal}</div>
                     <div class="top-name">${t.data.name}</div>
                     <div class="top-amount">${t.data.numericAmount.toLocaleString()}</div>
                 </div>
             `).join('');
-            html += '</div>';
-
-            // Render Rank 4 and 5 if available
-            if (allDonations.length >= 4) {
-                html += '<div class="runner-up-row">';
-                for(let i = 3; i < Math.min(5, allDonations.length); i++) {
-                    html += `
-                        <div class="runner-up-card">
-                            <div class="runner-up-rank">${i+1}</div>
-                            <div class="top-name">${allDonations[i].name}</div>
-                            <div class="top-amount">${allDonations[i].numericAmount.toLocaleString()}</div>
-                        </div>
-                    `;
-                }
-                html += '</div>';
-            }
-
-            container.innerHTML = html;
         }
 
         function renderList(list) {
@@ -266,7 +236,7 @@
                 return;
             }
 
-            listDiv.innerHTML = list.map((donation, index) => {
+            listDiv.innerHTML = list.map((donation) => {
                 const originalIndex = allDonations.findIndex(d => d === donation);
                 return `
                 <div class="list-item">
