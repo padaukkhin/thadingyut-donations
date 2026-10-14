@@ -100,7 +100,8 @@
         .top-donors-row { display: flex; align-items: flex-end; justify-content: center; gap: 10px; margin-bottom: 30px; height: 180px; }
         .top-card {
             background: rgba(30, 15, 60, 0.7); border: 1px solid rgba(255, 170, 0, 0.4);
-            border-radius: 15px; padding: 15px 5px; text-align: center; flex: 1; box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+            border-radius: 15px; padding: 15px 5px; text-align: center; flex: 1; max-width: 190px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.4);
             display: flex; flex-direction: column; justify-content: center; align-items: center;
         }
         .rank-1 { height: 160px; border-color: #ffdf00; background: rgba(50, 30, 90, 0.8); }
@@ -119,7 +120,14 @@
             background: rgba(30, 15, 60, 0.7); border: 1px solid rgba(255, 170, 0, 0.2);
             border-radius: 12px; padding: 15px; margin-bottom: 10px; display: flex; align-items: center; gap: 15px;
         }
-        .rank-circle { width: 35px; height: 35px; background: #ffaa00; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; color: #000; }
+        .rank-circle { 
+            width: 35px; height: 35px; background: #ffaa00; border-radius: 50%; 
+            display: flex; align-items: center; justify-content: center; font-weight: bold; color: #000; flex-shrink: 0;
+        }
+        .rank-medal {
+            width: 35px; height: 35px; display: flex; align-items: center; justify-content: center; 
+            font-size: 1.8em; flex-shrink: 0; filter: drop-shadow(0 0 5px rgba(255, 223, 0, 0.5));
+        }
         .item-details { flex-grow: 1; }
         .item-name { font-size: 1.1em; font-weight: bold; margin-bottom: 3px; }
         .item-amount { color: #ffdf00; font-weight: bold; font-size: 1.1em; }
@@ -176,7 +184,7 @@
         </div>
 
         <!-- Top 3 Donors Section -->
-        <div class="top-donors-row" id="top-3-container"></div>
+        <div class="top-donors-row" id="top-3-container" style="display: none;"></div>
 
         <input type="text" class="search-box" id="search-input" placeholder="🔍 အမည်ရှာရန်..." onkeyup="filterList()">
 
@@ -251,7 +259,7 @@
                 let p = particles[i];
                 p.x += p.vx;
                 p.y += p.vy;
-                p.vy += 0.03; // gravity
+                p.vy += 0.03;
                 p.alpha -= 0.015;
                 
                 if (p.alpha <= 0) {
@@ -283,10 +291,8 @@
                 
                 const parsedData = data.map(d => ({ ...d, numericAmount: parseAmount(d.amount) }));
                 
-                // Update Live Ticker with latest 5 entries
                 updateTicker(parsedData);
 
-                // Sort by highest amount for dashboard & list
                 allDonations = [...parsedData].sort((a, b) => b.numericAmount - a.numericAmount);
                 
                 updateDashboard();
@@ -303,7 +309,6 @@
             const latest5 = rawData.slice(-5).reverse();
             const newText = "🎉 နောက်ဆုံး ပါဝင်လှူဒါန်းထားသူများ — " + latest5.map(d => `✨ ${d.name} (${d.numericAmount.toLocaleString()} ကျပ်)`).join(" &nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp; ") + " 🎉";
             
-            // စာသားအသစ်ပြောင်းမှသာ Ticker ကို အသစ်ပြန်ရေးမည် (Animation မထစ်စေရန်)
             if (newText !== lastTickerContent) {
                 document.getElementById('live-ticker').innerHTML = newText;
                 lastTickerContent = newText;
@@ -318,22 +323,35 @@
             document.getElementById('total-amount').innerText = totalAmount.toLocaleString();
         }
 
+        // ၁ ယောက် သို့မဟုတ် ၂ ယောက်သာ ရှိလျှင်လည်း ပေါ်စေမည့် စနစ်
         function renderTop3() {
             const container = document.getElementById('top-3-container');
-            if (allDonations.length < 3) {
+            if (allDonations.length === 0) {
                 container.style.display = 'none'; 
                 return;
-            } else {
-                container.style.display = 'flex';
             }
             
-            const top3 = [
-                { data: allDonations[1], rank: 2, medal: '🥈', cls: 'rank-2' },
-                { data: allDonations[0], rank: 1, medal: '🥇', cls: 'rank-1' },
-                { data: allDonations[2], rank: 3, medal: '🥉', cls: 'rank-3' }
-            ];
+            container.style.display = 'flex';
+            let topList = [];
 
-            container.innerHTML = top3.map(t => `
+            if (allDonations.length === 1) {
+                topList = [
+                    { data: allDonations[0], rank: 1, medal: '🥇', cls: 'rank-1' }
+                ];
+            } else if (allDonations.length === 2) {
+                topList = [
+                    { data: allDonations[1], rank: 2, medal: '🥈', cls: 'rank-2' },
+                    { data: allDonations[0], rank: 1, medal: '🥇', cls: 'rank-1' }
+                ];
+            } else {
+                topList = [
+                    { data: allDonations[1], rank: 2, medal: '🥈', cls: 'rank-2' },
+                    { data: allDonations[0], rank: 1, medal: '🥇', cls: 'rank-1' },
+                    { data: allDonations[2], rank: 3, medal: '🥉', cls: 'rank-3' }
+                ];
+            }
+
+            container.innerHTML = topList.map(t => `
                 <div class="top-card ${t.cls}">
                     <div class="medal">${t.medal}</div>
                     <div class="top-name">${t.data.name}</div>
@@ -342,6 +360,7 @@
             `).join('');
         }
 
+        // အောက်ဆုံးစာရင်း၏ ၁၊ ၂၊ ၃ တွင်လည်း တံဆိပ်ပုံများ ပြသမည့် စနစ်
         function renderList(list) {
             const listDiv = document.getElementById('donations-list');
             if (list.length === 0) {
@@ -349,11 +368,21 @@
                 return;
             }
 
+            const medals = ['🥇', '🥈', '🥉'];
+
             listDiv.innerHTML = list.map((donation) => {
                 const originalIndex = allDonations.findIndex(d => d === donation);
+                
+                let rankBadge = '';
+                if (originalIndex < 3) {
+                    rankBadge = `<div class="rank-medal">${medals[originalIndex]}</div>`;
+                } else {
+                    rankBadge = `<div class="rank-circle">${originalIndex + 1}</div>`;
+                }
+
                 return `
                 <div class="list-item">
-                    <div class="rank-circle">${originalIndex + 1}</div>
+                    ${rankBadge}
                     <div class="item-details">
                         <div class="item-name">${donation.name}</div>
                         <div class="item-amount">${donation.numericAmount.toLocaleString()} ကျပ်</div>
