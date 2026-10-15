@@ -151,7 +151,7 @@
     <div class="lantern-container" id="lanterns"></div>
 
     <div class="ticker-wrap">
-        <div class="ticker" id="live-ticker">🎉 ၁၃၈၈ ခုနှစ် သီတင်းကျွတ်ပဝါရဏာ အားကစားဖြစ်မြောက်ရေး အလှူငွေစာရင်းမှ ကြိုဆိုပါသည် 🎉</div>
+        <div class="ticker" id="live-ticker">🎉 ၁၃၈၈ ခုနှစ် သီတင်းကျွတ်ပဝါရဏာ အားကစားဖြစ်မြောက်ရေး အလှူငွေစာရင်းမှ ကြိုဆိုပါသည် 🎉 &nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp; ⚠️ စာရင်းများမပေါ်ပါက VPN သုံးပီး ကြည့်ပေးပါခင်ဗျ ⚠️</div>
     </div>
 
     <div class="header">
@@ -303,7 +303,8 @@
         function updateTicker(rawData) {
             if (rawData.length === 0) return;
             const latest5 = rawData.slice(-5).reverse();
-            const newText = "🎉 နောက်ဆုံး ပါဝင်လှူဒါန်းထားသူများ — " + latest5.map(d => `✨ ${d.name} (${d.numericAmount.toLocaleString()} ကျပ်)`).join(" &nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp; ") + " 🎉";
+            // ဤနေရာတွင် VPN သတိပေးစာကို ထပ်မံဖြည့်စွက်ထားပါသည်
+            const newText = "🎉 နောက်ဆုံး ပါဝင်လှူဒါန်းထားသူများ — " + latest5.map(d => `✨ ${d.name} (${d.numericAmount.toLocaleString()} ကျပ်)`).join(" &nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp; ") + " 🎉 &nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp; ⚠️ စာရင်းများမပေါ်ပါက VPN သုံးပီး ကြည့်ပေးပါခင်ဗျ ⚠️";
             
             if (newText !== lastTickerContent) {
                 document.getElementById('live-ticker').innerHTML = newText;
