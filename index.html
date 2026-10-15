@@ -147,11 +147,9 @@
 </head>
 <body>
 
-    <!-- Fireworks & Lanterns Background -->
     <canvas id="fireworks-canvas"></canvas>
     <div class="lantern-container" id="lanterns"></div>
 
-    <!-- Live Ticker -->
     <div class="ticker-wrap">
         <div class="ticker" id="live-ticker">🎉 ၁၃၈၈ ခုနှစ် သီတင်းကျွတ်ပဝါရဏာ အားကစားဖြစ်မြောက်ရေး အလှူငွေစာရင်းမှ ကြိုဆိုပါသည် 🎉</div>
     </div>
@@ -191,7 +189,6 @@
             </div>
         </div>
 
-        <!-- Top 3 Donors Section -->
         <div class="top-donors-row" id="top-3-container" style="display: none;"></div>
 
         <input type="text" class="search-box" id="search-input" placeholder="🔍 အမည်ရှာရန်..." onkeyup="filterList()">
@@ -210,7 +207,6 @@
         let allDonations = [];
         let lastTickerContent = "";
 
-        // 1. Floating Lanterns
         const lanternContainer = document.getElementById('lanterns');
         for(let i=0; i<15; i++) {
             let lantern = document.createElement('div');
@@ -222,7 +218,6 @@
             lanternContainer.appendChild(lantern);
         }
 
-        // 2. Fireworks Animation
         const canvas = document.getElementById('fireworks-canvas');
         const ctx = canvas.getContext('2d');
         canvas.width = window.innerWidth;
@@ -278,7 +273,6 @@
         }
         animateFireworks();
 
-        // 3. Data & Logic
         function parseAmount(amountStr) {
             const mmNumbers = { '၀':0, '၁':1, '၂':2, '၃':3, '၄':4, '၅':5, '၆':6, '၇':7, '၈':8, '၉':9 };
             let str = String(amountStr).replace(/[၀-၉]/g, m => mmNumbers[m]);
@@ -403,4 +397,3 @@
     </script>
 </body>
 </html>
-
