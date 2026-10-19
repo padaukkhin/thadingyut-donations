@@ -37,50 +37,7 @@
             100% { transform: translateY(-120vh) scale(1.2) rotate(20deg); opacity: 0; }
         }
 
-        /* --- NEW: 1. Glassmorphism (မှန်သားဒီဇိုင်း) --- */
-        .glass-panel {
-            background: rgba(40, 20, 70, 0.4);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
-            border-radius: 15px;
-        }
-
-        /* --- NEW: 2. Scroll Animation (Fade-up) --- */
-        .fade-up {
-            animation: fadeUpAnim 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
-            opacity: 0; transform: translateY(30px);
-        }
-        @keyframes fadeUpAnim {
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        /* --- NEW: 3. VIP Glow Colors --- */
-        .vip-gold {
-            border: 1px solid rgba(255, 223, 0, 0.8) !important;
-            box-shadow: 0 0 15px rgba(255, 223, 0, 0.4), inset 0 0 10px rgba(255, 223, 0, 0.1) !important;
-        }
-        .vip-silver {
-            border: 1px solid rgba(192, 192, 192, 0.8) !important;
-            box-shadow: 0 0 15px rgba(192, 192, 192, 0.4), inset 0 0 10px rgba(192, 192, 192, 0.1) !important;
-        }
-
-        /* --- NEW: 4. Toast Notification Popup --- */
-        .toast-container {
-            position: fixed; bottom: 20px; right: 20px; display: flex; flex-direction: column; gap: 10px; z-index: 9999; pointer-events: none;
-        }
-        .toast-msg {
-            background: rgba(30, 15, 60, 0.95); backdrop-filter: blur(10px);
-            border-left: 4px solid #ffaa00; color: #fff; padding: 15px 20px; border-radius: 8px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.6);
-            animation: slideInRight 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) forwards, fadeOutToast 0.5s 4.5s forwards;
-            font-weight: bold; font-size: 0.95em; pointer-events: auto; display: flex; align-items: center; gap: 10px;
-        }
-        @keyframes slideInRight { from { transform: translateX(120%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
-        @keyframes fadeOutToast { from { opacity: 1; transform: translateY(0); } to { opacity: 0; transform: translateY(10px); } }
-
-        /* --- Live Ticker --- */
+        /* --- Live Ticker (ပြေးနေသော စာတန်း) --- */
         .ticker-wrap {
             width: 100%; overflow: hidden; background: rgba(255, 170, 0, 0.15);
             border-bottom: 1px solid rgba(255, 223, 0, 0.4); padding: 8px 0;
@@ -98,49 +55,91 @@
         /* --- Header & Typography --- */
         .header { text-align: center; padding: 30px 20px 25px; z-index: 10; position: relative; }
         .title-event { 
-            color: #ffaa00; font-size: 1.5em; font-weight: bold; margin-bottom: 12px; 
-            text-shadow: 0 0 15px rgba(255, 170, 0, 0.8), 0 0 30px rgba(255, 100, 0, 0.5); line-height: 1.5;
+            color: #ffaa00; 
+            font-size: 1.5em; 
+            font-weight: bold; 
+            margin-bottom: 12px; 
+            text-shadow: 0 0 15px rgba(255, 170, 0, 0.8), 0 0 30px rgba(255, 100, 0, 0.5);
+            line-height: 1.5;
         }
         .title-main { 
-            font-size: 2.1em; font-weight: bold; color: #fff;
-            text-shadow: 0 0 5px #ffdf00, 0 0 15px #ffaa00, 0 0 25px #ff7700, 0 4px 10px rgba(0, 0, 0, 0.8);
-            margin-bottom: 18px; line-height: 1.5; padding: 8px 15px; display: inline-block;
-            border-bottom: 2px solid rgba(255, 223, 0, 0.6); border-radius: 0 0 15px 15px;
+            font-size: 2.1em; 
+            font-weight: bold; 
+            color: #fff;
+            text-shadow: 
+                0 0 5px #ffdf00,
+                0 0 15px #ffaa00,
+                0 0 25px #ff7700,
+                0 4px 10px rgba(0, 0, 0, 0.8);
+            margin-bottom: 18px; 
+            line-height: 1.5;
+            padding: 8px 15px;
+            display: inline-block;
+            border-bottom: 2px solid rgba(255, 223, 0, 0.6);
+            border-radius: 0 0 15px 15px;
             background: linear-gradient(180deg, rgba(255,223,0,0) 0%, rgba(255,170,0,0.15) 100%);
         }
         .subtitle { color: #ccc; font-size: 1em; }
 
+        /* --- Container & Dashboard Stats --- */
         .container { max-width: 600px; margin: 0 auto; padding: 0 15px 50px; z-index: 10; position: relative; }
         
-        .poem-card { padding: 25px 20px; margin-bottom: 30px; text-align: center; line-height: 1.8; position: relative; }
+        /* --- Poem Section --- */
+        .poem-card {
+            background: rgba(30, 15, 60, 0.6);
+            border: 1px solid rgba(255, 170, 0, 0.3);
+            border-radius: 15px;
+            padding: 25px 20px;
+            margin-bottom: 30px;
+            text-align: center;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+            line-height: 1.8;
+            position: relative;
+        }
         .poem-title { color: #ffdf00; font-size: 1.3em; font-weight: bold; margin-bottom: 15px; }
         .poem-text { color: #e5d9f2; font-size: 1em; margin-bottom: 8px; }
         .poem-author { color: #ffaa00; text-align: right; font-style: italic; margin-top: 15px; font-size: 0.9em; line-height: 1.4; }
 
         .stats-row { display: flex; gap: 15px; margin-bottom: 25px; }
-        .stat-card { flex: 1; padding: 20px; text-align: center; }
+        .stat-card {
+            flex: 1; background: rgba(30, 15, 60, 0.7); border: 1px solid rgba(255, 170, 0, 0.3);
+            border-radius: 15px; padding: 20px; text-align: center; box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        }
         .stat-value { font-size: 1.8em; font-weight: bold; color: #ffdf00; margin-bottom: 5px; }
-        .stat-label { color: #ccc; font-size: 0.9em; }
+        .stat-label { color: #aaa; font-size: 0.9em; }
 
+        /* --- Top 3 Donors Layout --- */
         .top-donors-row { display: flex; align-items: flex-end; justify-content: center; gap: 10px; margin-bottom: 30px; height: 180px; }
-        .top-card { padding: 15px 5px; text-align: center; flex: 1; max-width: 190px; display: flex; flex-direction: column; justify-content: center; align-items: center; }
-        .rank-1 { height: 160px; background: rgba(50, 30, 90, 0.5); }
+        .top-card {
+            background: rgba(30, 15, 60, 0.7); border: 1px solid rgba(255, 170, 0, 0.4);
+            border-radius: 15px; padding: 15px 5px; text-align: center; flex: 1; max-width: 190px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+        }
+        .rank-1 { height: 160px; border-color: #ffdf00; background: rgba(50, 30, 90, 0.8); }
         .rank-2, .rank-3 { height: 130px; }
         .medal { font-size: 2em; margin-bottom: 5px; }
         .top-name { font-size: 0.9em; font-weight: bold; margin-bottom: 5px; }
         .top-amount { color: #ffdf00; font-weight: bold; }
 
+        /* --- Search & List --- */
         .search-box {
-            width: 100%; padding: 14px 20px; margin-bottom: 25px; outline: none; color: #fff; font-size: 1em;
-            background: rgba(40, 20, 70, 0.5); border: 1px solid rgba(255, 170, 0, 0.3); border-radius: 25px;
-            backdrop-filter: blur(10px);
+            width: 100%; padding: 12px 20px; border-radius: 25px; border: 1px solid rgba(255, 170, 0, 0.3);
+            background: rgba(30, 15, 60, 0.7); color: #fff; font-size: 1em; margin-bottom: 20px; outline: none;
         }
-        .search-box::placeholder { color: #aaa; }
-        
-        .list-item { padding: 15px; margin-bottom: 12px; display: flex; align-items: center; gap: 15px; transition: transform 0.2s; }
-        .list-item:hover { transform: scale(1.02); }
-        .rank-circle { width: 35px; height: 35px; background: linear-gradient(135deg, #ffaa00, #ffdf00); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; color: #000; flex-shrink: 0; box-shadow: 0 2px 8px rgba(255, 170, 0, 0.5); }
-        .rank-medal { width: 35px; height: 35px; display: flex; align-items: center; justify-content: center; font-size: 1.8em; flex-shrink: 0; filter: drop-shadow(0 0 5px rgba(255, 223, 0, 0.5)); }
+        .search-box::placeholder { color: #888; }
+        .list-item {
+            background: rgba(30, 15, 60, 0.7); border: 1px solid rgba(255, 170, 0, 0.2);
+            border-radius: 12px; padding: 15px; margin-bottom: 10px; display: flex; align-items: center; gap: 15px;
+        }
+        .rank-circle { 
+            width: 35px; height: 35px; background: #ffaa00; border-radius: 50%; 
+            display: flex; align-items: center; justify-content: center; font-weight: bold; color: #000; flex-shrink: 0;
+        }
+        .rank-medal {
+            width: 35px; height: 35px; display: flex; align-items: center; justify-content: center; 
+            font-size: 1.8em; flex-shrink: 0; filter: drop-shadow(0 0 5px rgba(255, 223, 0, 0.5));
+        }
         .item-details { flex-grow: 1; }
         .item-name { font-size: 1.1em; font-weight: bold; margin-bottom: 3px; }
         .item-amount { color: #ffdf00; font-weight: bold; font-size: 1.1em; }
@@ -150,13 +149,12 @@
 
     <canvas id="fireworks-canvas"></canvas>
     <div class="lantern-container" id="lanterns"></div>
-    <div class="toast-container" id="toast-container"></div> <!-- Popup ထွက်မည့်နေရာ -->
 
     <div class="ticker-wrap">
         <div class="ticker" id="live-ticker">🎉 ၁၃၈၈ ခုနှစ် သီတင်းကျွတ်ပဝါရဏာ အားကစားဖြစ်မြောက်ရေး အလှူငွေစာရင်းမှ ကြိုဆိုပါသည် 🎉 &nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp; ⚠️ စာရင်းများမပေါ်ပါက VPN သုံးပီး ကြည့်ပေးပါခင်ဗျ ⚠️</div>
     </div>
 
-    <div class="header fade-up">
+    <div class="header">
         <div class="title-event">🏆 ၁၃၈၈ ခုနှစ် သီတင်းကျွတ်ပဝါရဏာ အားကစားပွဲတော် 🏆</div>
         <h1 class="title-main">⚡ အားကစားဖြစ်မြောက်ရေး အလှူငွေစာရင်း ⚡</h1>
         <p class="subtitle">ပါဝင်လှူဒါန်းကြသော ကုသိုလ်ရှင်များအားလုံးကို ကျေးဇူးအထူးတင်ပါသည် 🙏</p>
@@ -164,7 +162,7 @@
 
     <div class="container">
         
-        <div class="poem-card glass-panel fade-up" style="animation-delay: 0.1s;">
+        <div class="poem-card">
             <div class="poem-title">သီတင်းကျွတ်</div>
             <div class="poem-text">ဘယ်ရွာမှ မရှိနိုင်ကြတဲ့ နေရာတစ်ခု လူငယ်တစ်စုက ထိန်းသိမ်းနေလေရဲ့...။</div>
             <div class="poem-text">ခပ်စိမ်းစိမ်းတော့ မကြည့်နဲ့သူငယ်ချင်း ဒီနေရာမှာ ဒို့မိဘတွေလည်းပါခဲ့တယ်..။</div>
@@ -180,25 +178,23 @@
             </div>
         </div>
 
-        <div class="stats-row fade-up" style="animation-delay: 0.2s;">
-            <div class="stat-card glass-panel">
+        <div class="stats-row">
+            <div class="stat-card">
                 <div class="stat-value" id="total-amount">0</div>
                 <div class="stat-label">စုစုပေါင်း (ကျပ်)</div>
             </div>
-            <div class="stat-card glass-panel">
+            <div class="stat-card">
                 <div class="stat-value" id="total-donors">0</div>
                 <div class="stat-label">အလှူရှင် (ဦး)</div>
             </div>
         </div>
 
-        <div class="top-donors-row fade-up" id="top-3-container" style="display: none; animation-delay: 0.3s;"></div>
+        <div class="top-donors-row" id="top-3-container" style="display: none;"></div>
 
-        <div class="fade-up" style="animation-delay: 0.4s;">
-            <input type="text" class="search-box" id="search-input" placeholder="🔍 အမည်ရှာရန်..." onkeyup="filterList()">
-        </div>
+        <input type="text" class="search-box" id="search-input" placeholder="🔍 အမည်ရှာရန်..." onkeyup="filterList()">
 
         <div id="donations-list">
-            <p style="text-align: center; color: #aaa;">စာရင်းများ ရယူနေပါသည်...</p>
+            <p style="text-align: center; color: #888;">စာရင်းများ ရယူနေပါသည်...</p>
         </div>
 
     </div>
@@ -210,9 +206,7 @@
 
         let allDonations = [];
         let lastTickerContent = "";
-        let previousDataCount = 0; // အသစ်ဝင်လာသူကို စစ်ဆေးရန်
 
-        // --- Lanterns & Fireworks Animations ---
         const lanternContainer = document.getElementById('lanterns');
         for(let i=0; i<15; i++) {
             let lantern = document.createElement('div');
@@ -228,7 +222,10 @@
         const ctx = canvas.getContext('2d');
         canvas.width = window.innerWidth;
         canvas.height = window.innerHeight;
-        window.addEventListener('resize', () => { canvas.width = window.innerWidth; canvas.height = window.innerHeight; });
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        });
 
         let particles = [];
         const colors = ['#ffdf00', '#ff5500', '#ff0077', '#00ffcc', '#ffffff', '#aa88ff'];
@@ -241,8 +238,12 @@
                 const angle = (Math.PI * 2 * i) / 35;
                 const speed = Math.random() * 3 + 1;
                 particles.push({
-                    x: x, y: y, vx: Math.cos(angle) * speed, vy: Math.sin(angle) * speed,
-                    alpha: 1, color: color, size: Math.random() * 2 + 1
+                    x: x, y: y,
+                    vx: Math.cos(angle) * speed,
+                    vy: Math.sin(angle) * speed,
+                    alpha: 1,
+                    color: color,
+                    size: Math.random() * 2 + 1
                 });
             }
         }
@@ -250,12 +251,23 @@
         function animateFireworks() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             if (Math.random() < 0.04) createFirework(); 
+            
             for (let i = particles.length - 1; i >= 0; i--) {
                 let p = particles[i];
-                p.x += p.vx; p.y += p.vy; p.vy += 0.03; p.alpha -= 0.015;
-                if (p.alpha <= 0) { particles.splice(i, 1); continue; }
-                ctx.globalAlpha = p.alpha; ctx.fillStyle = p.color;
-                ctx.beginPath(); ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2); ctx.fill();
+                p.x += p.vx;
+                p.y += p.vy;
+                p.vy += 0.03;
+                p.alpha -= 0.015;
+                
+                if (p.alpha <= 0) {
+                    particles.splice(i, 1);
+                    continue;
+                }
+                ctx.globalAlpha = p.alpha;
+                ctx.fillStyle = p.color;
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+                ctx.fill();
             }
             requestAnimationFrame(animateFireworks);
         }
@@ -268,17 +280,6 @@
             return parseInt(str, 10) || 0;
         }
 
-        // --- Toast Popup လုပ်ဆောင်ချက် ---
-        function showToast(name, amount) {
-            const container = document.getElementById('toast-container');
-            const toast = document.createElement('div');
-            toast.className = 'toast-msg';
-            toast.innerHTML = `🔔 <b>${name}</b> မှ ${amount.toLocaleString()} ကျပ် လှူဒါန်းသွားပါသည်`;
-            container.appendChild(toast);
-            setTimeout(() => { toast.remove(); }, 5500);
-        }
-
-        // --- Data Fetching ---
         async function loadDonations() {
             try {
                 const { data, error } = await dbClient.from('donations').select('*');
@@ -286,15 +287,8 @@
                 
                 const parsedData = data.map(d => ({ ...d, numericAmount: parseAmount(d.amount) }));
                 
-                // စာရင်းအသစ်ဝင်လာရင် Popup ပြရန် စစ်ဆေးခြင်း
-                if (previousDataCount > 0 && data.length > previousDataCount) {
-                    const newCount = data.length - previousDataCount;
-                    const newItems = data.slice(-newCount);
-                    newItems.forEach(item => showToast(item.name, parseAmount(item.amount)));
-                }
-                previousDataCount = data.length;
-
                 updateTicker(parsedData);
+
                 allDonations = [...parsedData].sort((a, b) => b.numericAmount - a.numericAmount);
                 
                 updateDashboard();
@@ -318,34 +312,42 @@
         }
 
         function updateDashboard() {
-            document.getElementById('total-donors').innerText = allDonations.length;
-            document.getElementById('total-amount').innerText = allDonations.reduce((sum, d) => sum + d.numericAmount, 0).toLocaleString();
+            const totalDonors = allDonations.length;
+            const totalAmount = allDonations.reduce((sum, d) => sum + d.numericAmount, 0);
+            
+            document.getElementById('total-donors').innerText = totalDonors;
+            document.getElementById('total-amount').innerText = totalAmount.toLocaleString();
         }
 
         function renderTop3() {
             const container = document.getElementById('top-3-container');
-            if (allDonations.length === 0) { container.style.display = 'none'; return; }
+            if (allDonations.length === 0) {
+                container.style.display = 'none'; 
+                return;
+            }
             
             container.style.display = 'flex';
             let topList = [];
 
             if (allDonations.length === 1) {
-                topList = [{ data: allDonations[0], rank: 1, medal: '🥇', cls: 'rank-1 vip-gold' }];
+                topList = [
+                    { data: allDonations[0], rank: 1, medal: '🥇', cls: 'rank-1' }
+                ];
             } else if (allDonations.length === 2) {
                 topList = [
-                    { data: allDonations[1], rank: 2, medal: '🥈', cls: 'rank-2 vip-silver' },
-                    { data: allDonations[0], rank: 1, medal: '🥇', cls: 'rank-1 vip-gold' }
+                    { data: allDonations[1], rank: 2, medal: '🥈', cls: 'rank-2' },
+                    { data: allDonations[0], rank: 1, medal: '🥇', cls: 'rank-1' }
                 ];
             } else {
                 topList = [
-                    { data: allDonations[1], rank: 2, medal: '🥈', cls: 'rank-2 vip-silver' },
-                    { data: allDonations[0], rank: 1, medal: '🥇', cls: 'rank-1 vip-gold' },
+                    { data: allDonations[1], rank: 2, medal: '🥈', cls: 'rank-2' },
+                    { data: allDonations[0], rank: 1, medal: '🥇', cls: 'rank-1' },
                     { data: allDonations[2], rank: 3, medal: '🥉', cls: 'rank-3' }
                 ];
             }
 
             container.innerHTML = topList.map(t => `
-                <div class="top-card glass-panel ${t.cls}">
+                <div class="top-card ${t.cls}">
                     <div class="medal">${t.medal}</div>
                     <div class="top-name">${t.data.name}</div>
                     <div class="top-amount">${t.data.numericAmount.toLocaleString()}</div>
@@ -356,24 +358,24 @@
         function renderList(list) {
             const listDiv = document.getElementById('donations-list');
             if (list.length === 0) {
-                listDiv.innerHTML = '<p style="text-align:center; color:#888;">စာရင်း မတွေ့ပါ။</p>'; return;
+                listDiv.innerHTML = '<p style="text-align:center; color:#888;">စာရင်း မတွေ့ပါ။</p>';
+                return;
             }
 
             const medals = ['🥇', '🥈', '🥉'];
-            listDiv.innerHTML = list.map((donation, index) => {
-                const originalIndex = allDonations.findIndex(d => d === donation);
-                let rankBadge = originalIndex < 3 ? `<div class="rank-medal">${medals[originalIndex]}</div>` : `<div class="rank-circle">${originalIndex + 1}</div>`;
-                
-                // VIP Glow ပေးမည့် သတ်မှတ်ချက် (ဥပမာ - ၁ သိန်းအထက် Gold, ၅ သောင်းအထက် Silver)
-                let vipClass = '';
-                if (donation.numericAmount >= 100000) vipClass = 'vip-gold';
-                else if (donation.numericAmount >= 50000) vipClass = 'vip-silver';
 
-                // Fade-up animation အတွက် အချိန်နောက်ကျမှု (Delay) ကို အစဉ်လိုက်ထည့်ပေးခြင်း
-                let animDelay = Math.min(index * 0.05 + 0.4, 2); 
+            listDiv.innerHTML = list.map((donation) => {
+                const originalIndex = allDonations.findIndex(d => d === donation);
+                
+                let rankBadge = '';
+                if (originalIndex < 3) {
+                    rankBadge = `<div class="rank-medal">${medals[originalIndex]}</div>`;
+                } else {
+                    rankBadge = `<div class="rank-circle">${originalIndex + 1}</div>`;
+                }
 
                 return `
-                <div class="list-item glass-panel fade-up ${vipClass}" style="animation-delay: ${animDelay}s;">
+                <div class="list-item">
                     ${rankBadge}
                     <div class="item-details">
                         <div class="item-name">${donation.name}</div>
