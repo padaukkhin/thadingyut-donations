@@ -30,7 +30,7 @@
 
         /* --- Ticker & Header --- */
         .ticker-wrap { width: 100%; overflow: hidden; background: rgba(255, 170, 0, 0.15); border-bottom: 1px solid rgba(255, 223, 0, 0.4); padding: 8px 0; position: sticky; top: 0; z-index: 100; backdrop-filter: blur(8px); }
-        .ticker { display: inline-block; white-space: nowrap; padding-left: 100%; animation: tickerMove 28s linear infinite; color: #ffdf00; font-weight: bold; font-size: 0.95em; }
+        .ticker { display: inline-block; white-space: nowrap; padding-left: 100%; animation: tickerMove 25s linear infinite; color: #ffdf00; font-weight: bold; font-size: 0.95em; }
         @keyframes tickerMove { 0% { transform: translate3d(0, 0, 0); } 100% { transform: translate3d(-100%, 0, 0); } }
 
         .header { text-align: center; padding: 25px 20px 15px; z-index: 10; position: relative; }
@@ -108,11 +108,32 @@
         .target-card .rm-amount { font-size: 2.2em; color: #fff; text-shadow: 0 0 15px #ffaa00, 0 0 30px #ff5500; margin: 10px 0; }
         .interest-note { font-size: 0.85em; color: #ffdd99; background: rgba(0,0,0,0.3); padding: 8px; border-radius: 8px; display: inline-block; }
 
-        .arrow-down { color: #ffaa00; font-size: 1.5em; margin: 15px 0; animation: bounce 2s infinite; text-shadow: 0 0 10px #ffaa00; }
-        .arrow-plus { color: #00e5ff; font-size: 1.8em; margin: 15px 0; font-weight: bold; text-shadow: 0 0 15px #00e5ff; }
-        .arrow-grow { background: rgba(255, 170, 0, 0.2); border: 1px solid rgba(255,170,0,0.5); color: #ffdf00; padding: 8px 20px; border-radius: 20px; font-size: 0.9em; font-weight: bold; margin: 20px 0; box-shadow: 0 0 15px rgba(255,170,0,0.3); }
+        /* --- Glowing Animated Arrows --- */
+        .elegant-arrow-down {
+            width: 18px; height: 18px;
+            border-bottom: 4px solid #ffdf00; border-right: 4px solid #ffdf00;
+            margin: 25px auto; transform: rotate(45deg);
+            animation: arrowBounce 2s infinite; filter: drop-shadow(0 0 8px #ffaa00);
+        }
+        @keyframes arrowBounce {
+            0%, 100% { transform: rotate(45deg) translate(-4px, -4px); }
+            50% { transform: rotate(45deg) translate(4px, 4px); }
+        }
 
-        @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(8px); } }
+        .elegant-plus {
+            width: 42px; height: 42px; border-radius: 50%;
+            background: rgba(0, 229, 255, 0.1); border: 2px solid #00e5ff;
+            color: #00e5ff; font-size: 30px; line-height: 38px; text-align: center;
+            margin: 25px auto; font-family: Arial, sans-serif;
+            box-shadow: 0 0 20px rgba(0, 229, 255, 0.4), inset 0 0 10px rgba(0, 229, 255, 0.2);
+            animation: plusPulse 2s infinite;
+        }
+        @keyframes plusPulse {
+            0%, 100% { transform: scale(1); box-shadow: 0 0 20px rgba(0, 229, 255, 0.4); }
+            50% { transform: scale(1.1); box-shadow: 0 0 30px rgba(0, 229, 255, 0.7); }
+        }
+
+        .arrow-grow { background: rgba(255, 170, 0, 0.2); border: 1px solid rgba(255,170,0,0.5); color: #ffdf00; padding: 10px 20px; border-radius: 20px; font-size: 0.95em; font-weight: bold; margin: 25px 0; box-shadow: 0 0 15px rgba(255,170,0,0.3); }
 
         /* Animation */
         .fade-up { opacity: 0; transform: translateY(30px); animation: fadeUpAnim 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) forwards; }
@@ -126,7 +147,9 @@
     <div class="lantern-container" id="lanterns"></div>
 
     <div class="ticker-wrap">
-        <div class="ticker" id="live-ticker">🎉 ၁၃၈၈ ခုနှစ် သီတင်းကျွတ်ပဝါရဏာ အားကစားပွဲတော်မှ ကြိုဆိုပါသည် 🎉</div>
+        <div class="ticker">
+            🎉 ၁၃၈၈ ခုနှစ် သီတင်းကျွတ်ပဝါရဏာ အားကစားပွဲတော် ဘဏ္ဍာရေးရှင်းတမ်း 🎉 &nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp; ⚠️ စာရင်းများမပေါ်ပါက VPN သုံးပီး ကြည့်ပေးပါခင်ဗျ ⚠️ &nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp; 🎉 ၁၃၈၈ ခုနှစ် သီတင်းကျွတ်ပဝါရဏာ အားကစားပွဲတော် ဘဏ္ဍာရေးရှင်းတမ်း 🎉
+        </div>
     </div>
 
     <div class="header">
@@ -181,14 +204,16 @@
                     </div>
                 </div>
 
-                <div class="arrow-down fade-up" style="animation-delay: 0.2s;">⬇️</div>
+                <!-- Animated Down Arrow -->
+                <div class="elegant-arrow-down fade-up" style="animation-delay: 0.2s;"></div>
 
                 <div class="rm-card surplus fade-up" style="animation-delay: 0.4s;">
                     <div class="rm-label">လက်ကျန် (ပိုငွေ)</div>
                     <div class="rm-amount">၉၀၀,၀၀၀ ကျပ်</div>
                 </div>
 
-                <div class="arrow-plus fade-up" style="animation-delay: 0.6s;">➕</div>
+                <!-- Animated Plus Sign -->
+                <div class="elegant-plus fade-up" style="animation-delay: 0.6s;">+</div>
 
                 <div class="rm-card vip-topup fade-up" style="animation-delay: 0.8s;">
                     <div style="font-size: 0.85em; color: #aaa;">💎 အထူးဂုဏ်ပြုမှတ်တမ်း</div>
@@ -199,7 +224,8 @@
                     <div class="vip-amt-badge">၁၀၀,၀၀၀ ကျပ်</div>
                 </div>
 
-                <div class="arrow-down fade-up" style="animation-delay: 1.0s;">⬇️</div>
+                <!-- Animated Down Arrow -->
+                <div class="elegant-arrow-down fade-up" style="animation-delay: 1.0s;"></div>
 
                 <div class="rm-card surplus fade-up" style="animation-delay: 1.2s;">
                     <div class="rm-label">၁၃၈၉ ခုနှစ်အတွက် မူတည်ရန်ပုံငွေ</div>
@@ -207,7 +233,7 @@
                 </div>
 
                 <div class="arrow-grow fade-up" style="animation-delay: 1.4s;">
-                    📈 လစဉ် ၂.၅% အတိုးဖြင့် တိုးပွားမည့်စနစ် ⬇️
+                    📈 ၁ နှစ်စာ ၂.၅% အတိုးဖြင့် တိုးပွားမည့်စနစ်
                 </div>
 
                 <div class="rm-card target-card fade-up" style="animation-delay: 1.6s;">
@@ -215,7 +241,7 @@
                     <div style="color: #fff; font-size: 0.9em; margin-top: 5px;">ရန်ပုံငွေ လျာထားချက်</div>
                     <div class="rm-amount">၁,၂၅၀,၀၀၀ ကျပ်</div>
                     <div class="interest-note">
-                        (၁၀ သိန်းရင်း x ၂.၅% အတိုး x ၁၀ လ = ၂ သိန်းခွဲ)
+                        (၁၀ သိန်းရင်း + ၁ နှစ်စာ ၂.၅% အတိုး)
                     </div>
                 </div>
 
@@ -241,7 +267,6 @@
         const dbClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
         let allDonations = [];
-        let lastTickerContent = "";
 
         function parseAmount(amountStr) {
             const mmNumbers = { '၀':0, '၁':1, '၂':2, '၃':3, '၄':4, '၅':5, '၆':6, '၇':7, '၈':8, '၉':9 };
@@ -264,23 +289,12 @@
                 if (error) throw error;
                 
                 const parsedData = data.map(d => ({ ...d, numericAmount: parseAmount(d.amount) }));
-                updateTicker(parsedData);
                 allDonations = [...parsedData].sort((a, b) => b.numericAmount - a.numericAmount);
                 
                 updateDashboard();
                 renderTop3();
                 filterList(); 
             } catch (err) { console.error("Error loading donations"); }
-        }
-
-        function updateTicker(rawData) {
-            if (rawData.length === 0) return;
-            const latest5 = rawData.slice(-5).reverse();
-            const newText = "🎉 နောက်ဆုံး ပါဝင်လှူဒါန်းထားသူများ — " + latest5.map(d => `✨ ${d.name} (${d.numericAmount.toLocaleString()} ကျပ်)`).join(" &nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp; ") + " 🎉";
-            if (newText !== lastTickerContent) {
-                document.getElementById('live-ticker').innerHTML = newText;
-                lastTickerContent = newText;
-            }
         }
 
         function updateDashboard() {
