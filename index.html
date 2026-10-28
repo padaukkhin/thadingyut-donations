@@ -13,121 +13,111 @@
         body { 
             font-family: 'Padauk', 'Pyidaungsu', sans-serif; 
             background: linear-gradient(135deg, #13062b, #200f40); 
-            color: #fff; 
-            min-height: 100vh;
-            overflow-x: hidden;
-            position: relative;
+            color: #fff; min-height: 100vh; overflow-x: hidden; position: relative;
         }
 
-        #fireworks-canvas {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            pointer-events: none; z-index: -2;
-        }
+        /* --- Backgrounds --- */
+        #fireworks-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: -2; }
         .lantern-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: -1; overflow: hidden; }
         .lantern-bg {
-            position: absolute; bottom: -100px; width: 40px; height: 50px;
+            position: absolute; bottom: -100px; width: 35px; height: 45px;
             background: radial-gradient(circle, #ffaa00, #ff5500);
-            border-radius: 20px; box-shadow: 0 0 20px #ff7700;
-            animation: floatUp linear infinite; opacity: 0.6;
+            border-radius: 20px; box-shadow: 0 0 15px #ff7700;
+            animation: floatUp linear infinite; opacity: 0.5;
         }
-        .lantern-bg::after { content: ''; position: absolute; bottom: -10px; left: 18px; width: 4px; height: 15px; background: #ffaa00; }
-        @keyframes floatUp {
-            0% { transform: translateY(0) scale(0.8) rotate(0deg); opacity: 0.8; }
-            100% { transform: translateY(-120vh) scale(1.2) rotate(20deg); opacity: 0; }
-        }
+        .lantern-bg::after { content: ''; position: absolute; bottom: -8px; left: 16px; width: 3px; height: 12px; background: #ffaa00; }
+        @keyframes floatUp { 0% { transform: translateY(0) scale(0.8) rotate(0deg); opacity: 0.7; } 100% { transform: translateY(-120vh) scale(1.2) rotate(20deg); opacity: 0; } }
 
-        /* --- VIP Glow Colors --- */
-        .vip-diamond {
-            border: 1px solid #00e5ff !important;
-            box-shadow: 0 0 15px rgba(0, 229, 255, 0.6), inset 0 0 10px rgba(0, 229, 255, 0.2) !important;
-        }
-        .vip-platinum {
-            border: 1px solid #e5e4e2 !important;
-            box-shadow: 0 0 15px rgba(229, 228, 226, 0.6), inset 0 0 10px rgba(229, 228, 226, 0.2) !important;
-        }
-        .vip-gold {
-            border: 1px solid #ffd700 !important;
-            box-shadow: 0 0 15px rgba(255, 215, 0, 0.6), inset 0 0 10px rgba(255, 215, 0, 0.2) !important;
-        }
-        .vip-silver {
-            border: 1px solid #c0c0c0 !important;
-            box-shadow: 0 0 12px rgba(192, 192, 192, 0.5), inset 0 0 8px rgba(192, 192, 192, 0.1) !important;
-        }
-
-        .ticker-wrap {
-            width: 100%; overflow: hidden; background: rgba(255, 170, 0, 0.15);
-            border-bottom: 1px solid rgba(255, 223, 0, 0.4); padding: 8px 0;
-            position: sticky; top: 0; z-index: 100; backdrop-filter: blur(8px);
-        }
-        .ticker {
-            display: inline-block; white-space: nowrap; padding-left: 100%;
-            animation: tickerMove 28s linear infinite; color: #ffdf00; font-weight: bold; font-size: 0.95em;
-        }
+        /* --- Ticker & Header --- */
+        .ticker-wrap { width: 100%; overflow: hidden; background: rgba(255, 170, 0, 0.15); border-bottom: 1px solid rgba(255, 223, 0, 0.4); padding: 8px 0; position: sticky; top: 0; z-index: 100; backdrop-filter: blur(8px); }
+        .ticker { display: inline-block; white-space: nowrap; padding-left: 100%; animation: tickerMove 28s linear infinite; color: #ffdf00; font-weight: bold; font-size: 0.95em; }
         @keyframes tickerMove { 0% { transform: translate3d(0, 0, 0); } 100% { transform: translate3d(-100%, 0, 0); } }
 
-        .header { text-align: center; padding: 30px 20px 25px; z-index: 10; position: relative; }
-        .title-event { color: #ffaa00; font-size: 1.5em; font-weight: bold; margin-bottom: 12px; text-shadow: 0 0 15px rgba(255, 170, 0, 0.8), 0 0 30px rgba(255, 100, 0, 0.5); line-height: 1.5; }
+        .header { text-align: center; padding: 25px 20px 15px; z-index: 10; position: relative; }
+        .title-event { color: #ffaa00; font-size: 1.4em; font-weight: bold; margin-bottom: 10px; text-shadow: 0 0 15px rgba(255, 170, 0, 0.8); }
         .title-main { 
-            font-size: 2.1em; font-weight: bold; color: #fff;
-            text-shadow: 0 0 5px #ffdf00, 0 0 15px #ffaa00, 0 0 25px #ff7700, 0 4px 10px rgba(0, 0, 0, 0.8);
-            margin-bottom: 18px; line-height: 1.5; padding: 8px 15px; display: inline-block;
-            border-bottom: 2px solid rgba(255, 223, 0, 0.6); border-radius: 0 0 15px 15px;
-            background: linear-gradient(180deg, rgba(255,223,0,0) 0%, rgba(255,170,0,0.15) 100%);
+            font-size: 1.9em; font-weight: bold; color: #fff;
+            text-shadow: 0 0 10px #ffaa00; margin-bottom: 10px; padding: 5px 15px; display: inline-block;
+            border-bottom: 2px solid rgba(255, 223, 0, 0.6);
         }
-        .subtitle { color: #ccc; font-size: 1em; }
 
         .container { max-width: 600px; margin: 0 auto; padding: 0 15px 50px; z-index: 10; position: relative; }
-        
-        .poem-card {
-            background: rgba(30, 15, 60, 0.6); border: 1px solid rgba(255, 170, 0, 0.3);
-            border-radius: 15px; padding: 25px 20px; margin-bottom: 30px; text-align: center;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.4); line-height: 1.8; position: relative;
-        }
-        .poem-title { color: #ffdf00; font-size: 1.3em; font-weight: bold; margin-bottom: 15px; }
-        .poem-text { color: #e5d9f2; font-size: 1em; margin-bottom: 8px; }
-        .poem-author { color: #ffaa00; text-align: right; font-style: italic; margin-top: 15px; font-size: 0.9em; line-height: 1.4; }
 
-        .stats-row { display: flex; gap: 15px; margin-bottom: 25px; }
-        .stat-card {
-            flex: 1; background: rgba(30, 15, 60, 0.7); border: 1px solid rgba(255, 170, 0, 0.3);
-            border-radius: 15px; padding: 20px; text-align: center; box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        /* --- Tab Buttons --- */
+        .tab-buttons { display: flex; gap: 10px; margin-bottom: 25px; }
+        .tab-btn {
+            flex: 1; padding: 12px; background: rgba(30, 15, 60, 0.7);
+            border: 1px solid rgba(255, 170, 0, 0.3); border-radius: 12px;
+            color: #fff; font-size: 1em; font-weight: bold; cursor: pointer;
+            font-family: inherit; transition: 0.3s;
         }
-        .stat-value { font-size: 1.8em; font-weight: bold; color: #ffdf00; margin-bottom: 5px; }
+        .tab-btn.active {
+            background: linear-gradient(135deg, #ffaa00, #ff7700);
+            color: #000; border-color: #ffdf00; box-shadow: 0 0 15px rgba(255, 170, 0, 0.5);
+        }
+
+        /* --- Donations View Styles --- */
+        .stats-row { display: flex; gap: 15px; margin-bottom: 25px; }
+        .stat-card { flex: 1; background: rgba(30, 15, 60, 0.7); border: 1px solid rgba(255, 170, 0, 0.3); border-radius: 15px; padding: 15px; text-align: center; }
+        .stat-value { font-size: 1.6em; font-weight: bold; color: #ffdf00; margin-bottom: 5px; }
         .stat-label { color: #aaa; font-size: 0.9em; }
 
-        .top-donors-row { display: flex; align-items: flex-end; justify-content: center; gap: 10px; margin-bottom: 30px; height: 180px; }
-        .top-card {
-            background: rgba(30, 15, 60, 0.7); border: 1px solid rgba(255, 170, 0, 0.4);
-            border-radius: 15px; padding: 15px 5px; text-align: center; flex: 1; max-width: 190px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.4); display: flex; flex-direction: column; justify-content: center; align-items: center;
-        }
+        .top-donors-row { display: flex; align-items: flex-end; justify-content: center; gap: 10px; margin-bottom: 25px; height: 180px; }
+        .top-card { background: rgba(30, 15, 60, 0.7); border: 1px solid rgba(255, 170, 0, 0.4); border-radius: 15px; padding: 15px 5px; text-align: center; flex: 1; max-width: 190px; display: flex; flex-direction: column; justify-content: center; align-items: center; }
         .rank-1 { height: 160px; background: rgba(50, 30, 90, 0.8); }
         .rank-2, .rank-3 { height: 130px; }
         .medal { font-size: 2em; margin-bottom: 5px; }
         .top-name { font-size: 0.9em; font-weight: bold; margin-bottom: 5px; }
         .top-amount { color: #ffdf00; font-weight: bold; }
 
-        .search-box {
-            width: 100%; padding: 12px 20px; border-radius: 25px; border: 1px solid rgba(255, 170, 0, 0.3);
-            background: rgba(30, 15, 60, 0.7); color: #fff; font-size: 1em; margin-bottom: 20px; outline: none;
-        }
-        .search-box::placeholder { color: #888; }
+        .search-box { width: 100%; padding: 12px 20px; border-radius: 25px; border: 1px solid rgba(255, 170, 0, 0.3); background: rgba(30, 15, 60, 0.7); color: #fff; font-size: 1em; margin-bottom: 20px; outline: none; }
         
-        .list-item {
-            background: rgba(30, 15, 60, 0.7); border: 1px solid rgba(255, 170, 0, 0.2);
-            border-radius: 12px; padding: 15px; margin-bottom: 10px; display: flex; align-items: center; gap: 15px;
-        }
-        .rank-circle { 
-            width: 35px; height: 35px; background: #ffaa00; border-radius: 50%; 
-            display: flex; align-items: center; justify-content: center; font-weight: bold; color: #000; flex-shrink: 0;
-        }
-        .rank-medal {
-            width: 35px; height: 35px; display: flex; align-items: center; justify-content: center; 
-            font-size: 1.8em; flex-shrink: 0; filter: drop-shadow(0 0 5px rgba(255, 223, 0, 0.5));
-        }
+        .list-item { background: rgba(30, 15, 60, 0.7); border: 1px solid rgba(255, 170, 0, 0.2); border-radius: 12px; padding: 15px; margin-bottom: 10px; display: flex; align-items: center; gap: 15px; }
+        .rank-circle { width: 35px; height: 35px; background: #ffaa00; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; color: #000; flex-shrink: 0; }
+        .rank-medal { width: 35px; height: 35px; display: flex; align-items: center; justify-content: center; font-size: 1.8em; flex-shrink: 0; filter: drop-shadow(0 0 5px rgba(255, 223, 0, 0.5)); }
         .item-details { flex-grow: 1; }
         .item-name { font-size: 1.1em; font-weight: bold; margin-bottom: 3px; }
         .item-amount { color: #ffdf00; font-weight: bold; font-size: 1.1em; }
+
+        .vip-diamond { border: 1px solid #00e5ff !important; box-shadow: 0 0 15px rgba(0, 229, 255, 0.6), inset 0 0 10px rgba(0, 229, 255, 0.2) !important; }
+        .vip-platinum { border: 1px solid #e5e4e2 !important; box-shadow: 0 0 15px rgba(229, 228, 226, 0.6), inset 0 0 10px rgba(229, 228, 226, 0.2) !important; }
+        .vip-gold { border: 1px solid #ffd700 !important; box-shadow: 0 0 15px rgba(255, 215, 0, 0.6), inset 0 0 10px rgba(255, 215, 0, 0.2) !important; }
+        .vip-silver { border: 1px solid #c0c0c0 !important; box-shadow: 0 0 12px rgba(192, 192, 192, 0.5), inset 0 0 8px rgba(192, 192, 192, 0.1) !important; }
+
+        /* --- Roadmap View Styles --- */
+        .roadmap { display: flex; flex-direction: column; align-items: center; padding-top: 10px; }
+        .rm-card { background: rgba(30, 15, 60, 0.8); border-radius: 16px; padding: 20px; text-align: center; width: 100%; border: 1px solid rgba(255, 255, 255, 0.1); box-shadow: 0 8px 32px rgba(0,0,0,0.3); }
+        .row-cards { display: flex; gap: 15px; width: 100%; }
+        .row-cards .rm-card { width: 50%; padding: 15px 10px; }
+        .rm-label { font-size: 0.9em; color: #ccc; margin-bottom: 5px; }
+        .rm-amount { font-size: 1.6em; font-weight: bold; }
+
+        .income { border-bottom: 3px solid #2ed573; }
+        .income .rm-amount { color: #2ed573; text-shadow: 0 0 10px rgba(46,213,115,0.4); }
+        .expense { border-bottom: 3px solid #ff4757; }
+        .expense .rm-amount { color: #ff4757; text-shadow: 0 0 10px rgba(255,71,87,0.4); }
+
+        .surplus { border: 1px solid rgba(255, 215, 0, 0.6); box-shadow: 0 0 20px rgba(255, 215, 0, 0.2), inset 0 0 10px rgba(255, 215, 0, 0.1); }
+        .surplus .rm-amount { color: #ffdf00; font-size: 1.8em; }
+
+        .vip-topup { background: linear-gradient(145deg, rgba(20,10,40,0.9), rgba(40,20,70,0.9)); border: 1px solid #00e5ff; box-shadow: 0 0 25px rgba(0, 229, 255, 0.3), inset 0 0 15px rgba(0, 229, 255, 0.1); }
+        .vip-name { color: #00e5ff; font-size: 1.4em; font-weight: bold; margin: 10px 0; text-shadow: 0 0 10px rgba(0,229,255,0.5); }
+        .vip-amt-badge { color: #fff; font-size: 1.3em; font-weight: bold; background: rgba(0,229,255,0.2); display: inline-block; padding: 5px 15px; border-radius: 20px; }
+
+        .target-card { background: linear-gradient(145deg, rgba(60,30,0,0.8), rgba(90,50,0,0.9)); border: 2px solid #ffd700; box-shadow: 0 0 30px rgba(255, 215, 0, 0.4), inset 0 0 20px rgba(255, 215, 0, 0.2); padding: 30px 20px; }
+        .target-card .rm-amount { font-size: 2.2em; color: #fff; text-shadow: 0 0 15px #ffaa00, 0 0 30px #ff5500; margin: 10px 0; }
+        .interest-note { font-size: 0.85em; color: #ffdd99; background: rgba(0,0,0,0.3); padding: 8px; border-radius: 8px; display: inline-block; }
+
+        .arrow-down { color: #ffaa00; font-size: 1.5em; margin: 15px 0; animation: bounce 2s infinite; text-shadow: 0 0 10px #ffaa00; }
+        .arrow-plus { color: #00e5ff; font-size: 1.8em; margin: 15px 0; font-weight: bold; text-shadow: 0 0 15px #00e5ff; }
+        .arrow-grow { background: rgba(255, 170, 0, 0.2); border: 1px solid rgba(255,170,0,0.5); color: #ffdf00; padding: 8px 20px; border-radius: 20px; font-size: 0.9em; font-weight: bold; margin: 20px 0; box-shadow: 0 0 15px rgba(255,170,0,0.3); }
+
+        @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(8px); } }
+
+        /* Animation */
+        .fade-up { opacity: 0; transform: translateY(30px); animation: fadeUpAnim 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) forwards; }
+        @keyframes fadeUpAnim { to { opacity: 1; transform: translateY(0); } }
+
     </style>
 </head>
 <body>
@@ -136,112 +126,122 @@
     <div class="lantern-container" id="lanterns"></div>
 
     <div class="ticker-wrap">
-        <div class="ticker" id="live-ticker">🎉 ၁၃၈၈ ခုနှစ် သီတင်းကျွတ်ပဝါရဏာ အားကစားဖြစ်မြောက်ရေး အလှူငွေစာရင်းမှ ကြိုဆိုပါသည် 🎉 &nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp; ⚠️ စာရင်းများမပေါ်ပါက VPN သုံးပီး ကြည့်ပေးပါခင်ဗျ ⚠️</div>
+        <div class="ticker" id="live-ticker">🎉 ၁၃၈၈ ခုနှစ် သီတင်းကျွတ်ပဝါရဏာ အားကစားပွဲတော်မှ ကြိုဆိုပါသည် 🎉</div>
     </div>
 
     <div class="header">
-        <div class="title-event">🏆 ၁၃၈၈ ခုနှစ် သီတင်းကျွတ်ပဝါရဏာ အားကစားပွဲတော် 🏆</div>
-        <h1 class="title-main">⚡ အားကစားဖြစ်မြောက်ရေး အလှူငွေစာရင်း ⚡</h1>
-        <p class="subtitle">ပါဝင်လှူဒါန်းကြသော ကုသိုလ်ရှင်များအားလုံးကို ကျေးဇူးအထူးတင်ပါသည် 🙏</p>
+        <div class="title-event">🏆 ပိတောက်ခင် အားကစားပွဲတော်</div>
+        <h1 class="title-main">အလှူငွေစာရင်း & ရှင်းတမ်း</h1>
     </div>
 
     <div class="container">
         
-        <div class="poem-card">
-            <div class="poem-title">သီတင်းကျွတ်</div>
-            <div class="poem-text">ဘယ်ရွာမှ မရှိနိုင်ကြတဲ့ နေရာတစ်ခု လူငယ်တစ်စုက ထိန်းသိမ်းနေလေရဲ့...။</div>
-            <div class="poem-text">ခပ်စိမ်းစိမ်းတော့ မကြည့်နဲ့သူငယ်ချင်း ဒီနေရာမှာ ဒို့မိဘတွေလည်းပါခဲ့တယ်..။</div>
-            <div class="poem-text">ဟိုး အတိတ်ကိုပြန်ကြည့်လိုက် မင်းကိုက်ခဲ့တဲ့ မုန့်တခြမ်း လေထဲမှာ ကြိုးတန်းလန်းနဲ့ ။</div>
-            <div class="poem-text">လွမ်းနေမိခဲ့ မနက်စောစော ဆန်ပြုတ်တွေ မုန့်ဖက်ထုပ် ပူပူရေ ဝေးခဲ့တာ ကြာလှပေါ့။</div>
-            <div class="poem-text">ရွာရောမြို့ပါကန် မှားမှား မှန်မှန် ဒိုင်ရဲ့သဘော၊ ငြင်းမနေနဲ့ သူငယ်ချင်း သရက်ပင်ရင်းက ဂိုးတိုင်က ယူကလစ် သားတွေပါ။</div>
-            <div class="poem-text">ပုလင်းဘူးကို ငါးမျှားချင်ရင် ဒီကိုလာ သွားစားစရာ တရွာလုံး မုန့်လုပ်ထားတယ်၊ အုန်းအုန်းကျွက်ကျွက်ဆို ချောတိုင် တက်လို့....။</div>
-            <div class="poem-text">ဒို့မမေ့ဖို့ အမှတ်တရများ ဘုန်းတော်ကြီးကျောင်းမှာ ချိတ်ဆွဲထားတယ်..။</div>
-            <div class="poem-text">မင်းလဲ ငါလဲ<br>ဝေးခဲ့ပေမဲ့ တွေးတွေးရဲ့ လွမ်းနေအုန်းမဲ့ မွေးရပ်ရင်ခွင်<br>ဒို့အားလုံးရဲ့......<br>ပိတောက်ခင်။</div>
-            <div class="poem-author">
-                - ဦးနေဝင်းစိုး<br>
-                (ပိတောက်ခင်)
+        <!-- Tab ခလုတ်များ -->
+        <div class="tab-buttons">
+            <button class="tab-btn active" id="btn-donations" onclick="switchTab('donations')">🙏 အလှူရှင်များ</button>
+            <button class="tab-btn" id="btn-roadmap" onclick="switchTab('roadmap')">📊 ဘဏ္ဍာရေး ရှင်းတမ်း</button>
+        </div>
+
+        <!-- ============================================== -->
+        <!-- VIEW 1: အလှူရှင်များ စာရင်း (Supabase မှ လာသည်) -->
+        <!-- ============================================== -->
+        <div id="view-donations">
+            <div class="stats-row">
+                <div class="stat-card">
+                    <div class="stat-value" id="total-amount">0</div>
+                    <div class="stat-label">စုစုပေါင်း (ကျပ်)</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="total-donors">0</div>
+                    <div class="stat-label">အလှူရှင် (ဦး)</div>
+                </div>
+            </div>
+
+            <div class="top-donors-row" id="top-3-container" style="display: none;"></div>
+            <input type="text" class="search-box" id="search-input" placeholder="🔍 အမည်ရှာရန်..." onkeyup="filterList()">
+            <div id="donations-list">
+                <p style="text-align: center; color: #888;">စာရင်းများ ရယူနေပါသည်...</p>
             </div>
         </div>
 
-        <div class="stats-row">
-            <div class="stat-card">
-                <div class="stat-value" id="total-amount">0</div>
-                <div class="stat-label">စုစုပေါင်း (ကျပ်)</div>
+        <!-- ============================================== -->
+        <!-- VIEW 2: ဘဏ္ဍာရေး ရှင်းတမ်း (Roadmap အသေ) -->
+        <!-- ============================================== -->
+        <div id="view-roadmap" style="display: none;">
+            <div class="roadmap">
+                
+                <div class="row-cards fade-up">
+                    <div class="rm-card income">
+                        <div class="rm-label">စုစုပေါင်း ရရှိငွေ</div>
+                        <div class="rm-amount">၂,၀၈၀,၀၀၀</div>
+                    </div>
+                    <div class="rm-card expense">
+                        <div class="rm-label">သုံးစွဲငွေ</div>
+                        <div class="rm-amount">၁,၁၈၀,၀၀၀</div>
+                    </div>
+                </div>
+
+                <div class="arrow-down fade-up" style="animation-delay: 0.2s;">⬇️</div>
+
+                <div class="rm-card surplus fade-up" style="animation-delay: 0.4s;">
+                    <div class="rm-label">လက်ကျန် (ပိုငွေ)</div>
+                    <div class="rm-amount">၉၀၀,၀၀၀ ကျပ်</div>
+                </div>
+
+                <div class="arrow-plus fade-up" style="animation-delay: 0.6s;">➕</div>
+
+                <div class="rm-card vip-topup fade-up" style="animation-delay: 0.8s;">
+                    <div style="font-size: 0.85em; color: #aaa;">💎 အထူးဂုဏ်ပြုမှတ်တမ်း</div>
+                    <div style="font-size: 0.9em; margin-top: 10px; color: #e5d9f2; line-height: 1.5;">
+                        ၁၃၈၉ ခုနှစ် ရန်ပုံငွေ ကျပ် (၁၀) သိန်း တိတိ ပြည့်သွားစေရန်အတွက် ထပ်မံဖြည့်တင်း လှူဒါန်းသူ
+                    </div>
+                    <div class="vip-name">ကိုပိုင် (ရိတ်ရွှေစက်)</div>
+                    <div class="vip-amt-badge">၁၀၀,၀၀၀ ကျပ်</div>
+                </div>
+
+                <div class="arrow-down fade-up" style="animation-delay: 1.0s;">⬇️</div>
+
+                <div class="rm-card surplus fade-up" style="animation-delay: 1.2s;">
+                    <div class="rm-label">၁၃၈၉ ခုနှစ်အတွက် မူတည်ရန်ပုံငွေ</div>
+                    <div class="rm-amount">၁,၀၀၀,၀၀၀ ကျပ်</div>
+                </div>
+
+                <div class="arrow-grow fade-up" style="animation-delay: 1.4s;">
+                    📈 လစဉ် ၂.၅% အတိုးဖြင့် တိုးပွားမည့်စနစ် ⬇️
+                </div>
+
+                <div class="rm-card target-card fade-up" style="animation-delay: 1.6s;">
+                    <div style="color: #ffaa00; font-weight: bold; font-size: 1.1em;">လာမည့် ၁၃၈၉ ခုနှစ် ပွဲတော်အတွက်</div>
+                    <div style="color: #fff; font-size: 0.9em; margin-top: 5px;">ရန်ပုံငွေ လျာထားချက်</div>
+                    <div class="rm-amount">၁,၂၅၀,၀၀၀ ကျပ်</div>
+                    <div class="interest-note">
+                        (၁၀ သိန်းရင်း x ၂.၅% အတိုး x ၁၀ လ = ၂ သိန်းခွဲ)
+                    </div>
+                </div>
+
+                <div style="margin-top: 30px; color: #888; font-size: 0.85em;">- ပိတောက်ခင် လူငယ်များအဖွဲ့ -</div>
             </div>
-            <div class="stat-card">
-                <div class="stat-value" id="total-donors">0</div>
-                <div class="stat-label">အလှူရှင် (ဦး)</div>
-            </div>
-        </div>
-
-        <div class="top-donors-row" id="top-3-container" style="display: none;"></div>
-
-        <input type="text" class="search-box" id="search-input" placeholder="🔍 အမည်ရှာရန်..." onkeyup="filterList()">
-
-        <div id="donations-list">
-            <p style="text-align: center; color: #888;">စာရင်းများ ရယူနေပါသည်...</p>
         </div>
 
     </div>
 
     <script>
+        // --- View Switcher ---
+        function switchTab(tab) {
+            document.getElementById('btn-donations').className = 'tab-btn' + (tab === 'donations' ? ' active' : '');
+            document.getElementById('btn-roadmap').className = 'tab-btn' + (tab === 'roadmap' ? ' active' : '');
+            
+            document.getElementById('view-donations').style.display = (tab === 'donations') ? 'block' : 'none';
+            document.getElementById('view-roadmap').style.display = (tab === 'roadmap') ? 'block' : 'none';
+        }
+
+        // --- Supabase Data Loading for Donations Tab ---
         const SUPABASE_URL = 'https://oqulntrmixnlgbkkryhk.supabase.co';
         const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9xdWxudHJtaXhubGdia2tyeWhrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTE1MDcyMDcsImV4cCI6MjEwNzA4MzIwN30.t-BNmpxLySUBG052Tmisnc-FcXv6BEIyVBpU-R_rDeo';
         const dbClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
         let allDonations = [];
         let lastTickerContent = "";
-
-        const lanternContainer = document.getElementById('lanterns');
-        for(let i=0; i<15; i++) {
-            let lantern = document.createElement('div');
-            lantern.className = 'lantern-bg';
-            lantern.style.left = Math.random() * 100 + 'vw';
-            lantern.style.animationDuration = (Math.random() * 10 + 10) + 's';
-            lantern.style.animationDelay = (Math.random() * 10) + 's';
-            lantern.style.transform = `scale(${Math.random() * 0.5 + 0.5})`;
-            lanternContainer.appendChild(lantern);
-        }
-
-        const canvas = document.getElementById('fireworks-canvas');
-        const ctx = canvas.getContext('2d');
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
-        window.addEventListener('resize', () => {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-        });
-
-        let particles = [];
-        const colors = ['#ffdf00', '#ff5500', '#ff0077', '#00ffcc', '#ffffff', '#aa88ff'];
-
-        function createFirework() {
-            const x = Math.random() * canvas.width;
-            const y = Math.random() * (canvas.height * 0.5);
-            const color = colors[Math.floor(Math.random() * colors.length)];
-            for (let i = 0; i < 35; i++) {
-                const angle = (Math.PI * 2 * i) / 35;
-                const speed = Math.random() * 3 + 1;
-                particles.push({
-                    x: x, y: y, vx: Math.cos(angle) * speed, vy: Math.sin(angle) * speed,
-                    alpha: 1, color: color, size: Math.random() * 2 + 1
-                });
-            }
-        }
-
-        function animateFireworks() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            if (Math.random() < 0.04) createFirework(); 
-            for (let i = particles.length - 1; i >= 0; i--) {
-                let p = particles[i];
-                p.x += p.vx; p.y += p.vy; p.vy += 0.03; p.alpha -= 0.015;
-                if (p.alpha <= 0) { particles.splice(i, 1); continue; }
-                ctx.globalAlpha = p.alpha; ctx.fillStyle = p.color;
-                ctx.beginPath(); ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2); ctx.fill();
-            }
-            requestAnimationFrame(animateFireworks);
-        }
-        animateFireworks();
 
         function parseAmount(amountStr) {
             const mmNumbers = { '၀':0, '၁':1, '၂':2, '၃':3, '၄':4, '၅':5, '၆':6, '၇':7, '၈':8, '၉':9 };
@@ -264,22 +264,19 @@
                 if (error) throw error;
                 
                 const parsedData = data.map(d => ({ ...d, numericAmount: parseAmount(d.amount) }));
-                
                 updateTicker(parsedData);
                 allDonations = [...parsedData].sort((a, b) => b.numericAmount - a.numericAmount);
                 
                 updateDashboard();
                 renderTop3();
                 filterList(); 
-            } catch (err) {
-                console.error("ချိတ်ဆက်မှု အမှားအယွင်းဖြစ်နေပါသည်။");
-            }
+            } catch (err) { console.error("Error loading donations"); }
         }
 
         function updateTicker(rawData) {
             if (rawData.length === 0) return;
             const latest5 = rawData.slice(-5).reverse();
-            const newText = "🎉 နောက်ဆုံး ပါဝင်လှူဒါန်းထားသူများ — " + latest5.map(d => `✨ ${d.name} (${d.numericAmount.toLocaleString()} ကျပ်)`).join(" &nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp; ") + " 🎉 &nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp; ⚠️ စာရင်းများမပေါ်ပါက VPN သုံးပီး ကြည့်ပေးပါခင်ဗျ ⚠️";
+            const newText = "🎉 နောက်ဆုံး ပါဝင်လှူဒါန်းထားသူများ — " + latest5.map(d => `✨ ${d.name} (${d.numericAmount.toLocaleString()} ကျပ်)`).join(" &nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp; ") + " 🎉";
             if (newText !== lastTickerContent) {
                 document.getElementById('live-ticker').innerHTML = newText;
                 lastTickerContent = newText;
@@ -296,27 +293,17 @@
             if (allDonations.length === 0) { container.style.display = 'none'; return; }
             container.style.display = 'flex';
             let topList = [];
-
             if (allDonations.length === 1) topList = [{ data: allDonations[0], rank: 1, medal: '🥇', cls: 'rank-1' }];
-            else if (allDonations.length === 2) topList = [
-                { data: allDonations[1], rank: 2, medal: '🥈', cls: 'rank-2' },
-                { data: allDonations[0], rank: 1, medal: '🥇', cls: 'rank-1' }
-            ];
-            else topList = [
-                { data: allDonations[1], rank: 2, medal: '🥈', cls: 'rank-2' },
-                { data: allDonations[0], rank: 1, medal: '🥇', cls: 'rank-1' },
-                { data: allDonations[2], rank: 3, medal: '🥉', cls: 'rank-3' }
-            ];
+            else if (allDonations.length === 2) topList = [ { data: allDonations[1], rank: 2, medal: '🥈', cls: 'rank-2' }, { data: allDonations[0], rank: 1, medal: '🥇', cls: 'rank-1' } ];
+            else topList = [ { data: allDonations[1], rank: 2, medal: '🥈', cls: 'rank-2' }, { data: allDonations[0], rank: 1, medal: '🥇', cls: 'rank-1' }, { data: allDonations[2], rank: 3, medal: '🥉', cls: 'rank-3' } ];
 
             container.innerHTML = topList.map(t => {
                 let vipClass = getVipClass(t.data.numericAmount);
-                return `
-                <div class="top-card ${t.cls} ${vipClass}">
-                    <div class="medal">${t.medal}</div>
-                    <div class="top-name">${t.data.name}</div>
-                    <div class="top-amount">${t.data.numericAmount.toLocaleString()}</div>
-                </div>
-                `;
+                return `<div class="top-card ${t.cls} ${vipClass}">
+                            <div class="medal">${t.medal}</div>
+                            <div class="top-name">${t.data.name}</div>
+                            <div class="top-amount">${t.data.numericAmount.toLocaleString()}</div>
+                        </div>`;
             }).join('');
         }
 
@@ -329,16 +316,13 @@
                 const originalIndex = allDonations.findIndex(d => d === donation);
                 let rankBadge = originalIndex < 3 ? `<div class="rank-medal">${medals[originalIndex]}</div>` : `<div class="rank-circle">${originalIndex + 1}</div>`;
                 let vipClass = getVipClass(donation.numericAmount);
-
-                return `
-                <div class="list-item ${vipClass}">
-                    ${rankBadge}
-                    <div class="item-details">
-                        <div class="item-name">${donation.name}</div>
-                        <div class="item-amount">${donation.numericAmount.toLocaleString()} ကျပ်</div>
-                    </div>
-                </div>
-                `;
+                return `<div class="list-item ${vipClass}">
+                            ${rankBadge}
+                            <div class="item-details">
+                                <div class="item-name">${donation.name}</div>
+                                <div class="item-amount">${donation.numericAmount.toLocaleString()} ကျပ်</div>
+                            </div>
+                        </div>`;
             }).join('');
         }
 
@@ -351,9 +335,46 @@
         loadDonations();
         setInterval(loadDonations, 3000);
 
-        // --- Silent Visitor Tracking ---
+        // --- Background Animations ---
+        const lanternContainer = document.getElementById('lanterns');
+        for(let i=0; i<12; i++) {
+            let l = document.createElement('div');
+            l.className = 'lantern-bg';
+            l.style.left = Math.random() * 100 + 'vw';
+            l.style.animationDuration = (Math.random() * 10 + 10) + 's';
+            lanternContainer.appendChild(l);
+        }
+
+        const canvas = document.getElementById('fireworks-canvas');
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        let particles = [];
+        function createFirework() {
+            const x = Math.random() * canvas.width;
+            const y = Math.random() * (canvas.height * 0.4);
+            for (let i = 0; i < 25; i++) {
+                const angle = (Math.PI * 2 * i) / 25;
+                particles.push({ x, y, vx: Math.cos(angle)*1.5, vy: Math.sin(angle)*1.5, alpha: 1, size: Math.random() * 2 + 1 });
+            }
+        }
+        function animateFireworks() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            if (Math.random() < 0.03) createFirework();
+            for (let i = particles.length - 1; i >= 0; i--) {
+                let p = particles[i];
+                p.x += p.vx; p.y += p.vy; p.alpha -= 0.015;
+                if (p.alpha <= 0) { particles.splice(i, 1); continue; }
+                ctx.globalAlpha = p.alpha; ctx.fillStyle = '#ffdf00';
+                ctx.beginPath(); ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2); ctx.fill();
+            }
+            requestAnimationFrame(animateFireworks);
+        }
+        animateFireworks();
+
+        // --- Visitor Tracking ---
         if (!localStorage.getItem('visited_padaukkhin')) {
-            fetch('https://padaukkhin.pythonanywhere.com/track_visit').catch(e => console.log('Tracking off'));
+            fetch('https://padaukkhin.pythonanywhere.com/track_visit').catch(e => {});
             localStorage.setItem('visited_padaukkhin', 'true');
         }
     </script>
