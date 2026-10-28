@@ -84,10 +84,10 @@
         .vip-gold { border: 1px solid #ffd700 !important; box-shadow: 0 0 15px rgba(255, 215, 0, 0.6), inset 0 0 10px rgba(255, 215, 0, 0.2) !important; }
         .vip-silver { border: 1px solid #c0c0c0 !important; box-shadow: 0 0 12px rgba(192, 192, 192, 0.5), inset 0 0 8px rgba(192, 192, 192, 0.1) !important; }
 
-        /* --- Roadmap View Styles --- */
-        .roadmap { display: flex; flex-direction: column; align-items: center; padding-top: 10px; }
-        .rm-card { background: rgba(30, 15, 60, 0.8); border-radius: 16px; padding: 20px; text-align: center; width: 100%; border: 1px solid rgba(255, 255, 255, 0.1); box-shadow: 0 8px 32px rgba(0,0,0,0.3); }
-        .row-cards { display: flex; gap: 15px; width: 100%; }
+        /* --- Roadmap Flow Styles (ချိတ်ဆက်လိုင်းစနစ်) --- */
+        .roadmap { display: flex; flex-direction: column; align-items: center; padding-top: 10px; width: 100%; }
+        .rm-card { background: rgba(30, 15, 60, 0.85); border-radius: 16px; padding: 20px; text-align: center; width: 100%; border: 1px solid rgba(255, 255, 255, 0.1); box-shadow: 0 8px 32px rgba(0,0,0,0.3); z-index: 2; position: relative; }
+        .row-cards { display: flex; gap: 15px; width: 100%; z-index: 2; }
         .row-cards .rm-card { width: 50%; padding: 15px 10px; }
         .rm-label { font-size: 0.9em; color: #ccc; margin-bottom: 5px; }
         .rm-amount { font-size: 1.6em; font-weight: bold; }
@@ -104,39 +104,59 @@
         .vip-name { color: #00e5ff; font-size: 1.4em; font-weight: bold; margin: 10px 0; text-shadow: 0 0 10px rgba(0,229,255,0.5); }
         .vip-amt-badge { color: #fff; font-size: 1.3em; font-weight: bold; background: rgba(0,229,255,0.2); display: inline-block; padding: 5px 15px; border-radius: 20px; }
 
-        .target-card { background: linear-gradient(145deg, rgba(60,30,0,0.8), rgba(90,50,0,0.9)); border: 2px solid #ffd700; box-shadow: 0 0 30px rgba(255, 215, 0, 0.4), inset 0 0 20px rgba(255, 215, 0, 0.2); padding: 30px 20px; }
+        .target-card { background: linear-gradient(145deg, rgba(60,30,0,0.85), rgba(90,50,0,0.95)); border: 2px solid #ffd700; box-shadow: 0 0 30px rgba(255, 215, 0, 0.4), inset 0 0 20px rgba(255, 215, 0, 0.2); padding: 30px 20px; }
         .target-card .rm-amount { font-size: 2.2em; color: #fff; text-shadow: 0 0 15px #ffaa00, 0 0 30px #ff5500; margin: 10px 0; }
-        .interest-note { font-size: 0.85em; color: #ffdd99; background: rgba(0,0,0,0.3); padding: 8px; border-radius: 8px; display: inline-block; }
+        .interest-note { font-size: 0.95em; color: #ffdd99; background: rgba(0,0,0,0.4); padding: 8px 16px; border-radius: 8px; display: inline-block; font-weight: bold; }
 
-        /* --- Glowing Animated Arrows --- */
-        .elegant-arrow-down {
-            width: 18px; height: 18px;
-            border-bottom: 4px solid #ffdf00; border-right: 4px solid #ffdf00;
-            margin: 25px auto; transform: rotate(45deg);
-            animation: arrowBounce 2s infinite; filter: drop-shadow(0 0 8px #ffaa00);
+        /* --- Seamless Flow Connectors (ချိတ်ဆက်စီးဆင်းလိုင်းများ) --- */
+        .flow-line {
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            height: 48px; position: relative; z-index: 1;
         }
-        @keyframes arrowBounce {
-            0%, 100% { transform: rotate(45deg) translate(-4px, -4px); }
-            50% { transform: rotate(45deg) translate(4px, 4px); }
+        .flow-line .stem {
+            width: 3px; height: 32px; background: linear-gradient(180deg, #ffdf00, #ffaa00);
+            box-shadow: 0 0 8px #ffaa00;
         }
-
-        .elegant-plus {
-            width: 42px; height: 42px; border-radius: 50%;
-            background: rgba(0, 229, 255, 0.1); border: 2px solid #00e5ff;
-            color: #00e5ff; font-size: 30px; line-height: 38px; text-align: center;
-            margin: 25px auto; font-family: Arial, sans-serif;
-            box-shadow: 0 0 20px rgba(0, 229, 255, 0.4), inset 0 0 10px rgba(0, 229, 255, 0.2);
-            animation: plusPulse 2s infinite;
-        }
-        @keyframes plusPulse {
-            0%, 100% { transform: scale(1); box-shadow: 0 0 20px rgba(0, 229, 255, 0.4); }
-            50% { transform: scale(1.1); box-shadow: 0 0 30px rgba(0, 229, 255, 0.7); }
+        .flow-line .arrowhead {
+            width: 0; height: 0;
+            border-left: 7px solid transparent;
+            border-right: 7px solid transparent;
+            border-top: 10px solid #ffaa00;
+            filter: drop-shadow(0 0 5px #ffaa00);
+            animation: bounceSmall 1.5s infinite;
         }
 
-        .arrow-grow { background: rgba(255, 170, 0, 0.2); border: 1px solid rgba(255,170,0,0.5); color: #ffdf00; padding: 10px 20px; border-radius: 20px; font-size: 0.95em; font-weight: bold; margin: 25px 0; box-shadow: 0 0 15px rgba(255,170,0,0.3); }
+        .flow-line-plus {
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            height: 52px; position: relative; z-index: 1;
+        }
+        .flow-line-plus .circle-plus {
+            width: 32px; height: 32px; border-radius: 50%;
+            background: #00e5ff; color: #0b051a; font-size: 22px; font-weight: bold;
+            display: flex; align-items: center; justify-content: center;
+            box-shadow: 0 0 15px #00e5ff; animation: pulsePlus 1.5s infinite;
+        }
+
+        .growth-badge-container {
+            display: flex; flex-direction: column; align-items: center; margin: 5px 0;
+        }
+        .growth-badge {
+            background: rgba(255, 170, 0, 0.2); border: 1px solid #ffd700; color: #ffdf00;
+            padding: 8px 18px; border-radius: 20px; font-size: 0.95em; font-weight: bold;
+            box-shadow: 0 0 15px rgba(255,170,0,0.3); display: flex; align-items: center; gap: 8px;
+        }
+
+        @keyframes bounceSmall {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(4px); }
+        }
+        @keyframes pulsePlus {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.12); }
+        }
 
         /* Animation */
-        .fade-up { opacity: 0; transform: translateY(30px); animation: fadeUpAnim 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) forwards; }
+        .fade-up { opacity: 0; transform: translateY(20px); animation: fadeUpAnim 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) forwards; }
         @keyframes fadeUpAnim { to { opacity: 1; transform: translateY(0); } }
 
     </style>
@@ -165,9 +185,7 @@
             <button class="tab-btn" id="btn-roadmap" onclick="switchTab('roadmap')">📊 ဘဏ္ဍာရေး ရှင်းတမ်း</button>
         </div>
 
-        <!-- ============================================== -->
-        <!-- VIEW 1: အလှူရှင်များ စာရင်း (Supabase မှ လာသည်) -->
-        <!-- ============================================== -->
+        <!-- VIEW 1: အလှူရှင်များ စာရင်း -->
         <div id="view-donations">
             <div class="stats-row">
                 <div class="stat-card">
@@ -187,12 +205,11 @@
             </div>
         </div>
 
-        <!-- ============================================== -->
-        <!-- VIEW 2: ဘဏ္ဍာရေး ရှင်းတမ်း (Roadmap အသေ) -->
-        <!-- ============================================== -->
+        <!-- VIEW 2: ဘဏ္ဍာရေး ရှင်းတမ်း (Roadmap Flow) -->
         <div id="view-roadmap" style="display: none;">
             <div class="roadmap">
                 
+                <!-- အဆင့် ၁: ရငွေနှင့် သုံးငွေ -->
                 <div class="row-cards fade-up">
                     <div class="rm-card income">
                         <div class="rm-label">စုစုပေါင်း ရရှိငွေ</div>
@@ -204,18 +221,25 @@
                     </div>
                 </div>
 
-                <!-- Animated Down Arrow -->
-                <div class="elegant-arrow-down fade-up" style="animation-delay: 0.2s;"></div>
+                <!-- ဆက်သွယ်သည့် ချိတ်ဆက်လိုင်း ၁ -->
+                <div class="flow-line fade-up">
+                    <div class="stem"></div>
+                    <div class="arrowhead"></div>
+                </div>
 
-                <div class="rm-card surplus fade-up" style="animation-delay: 0.4s;">
+                <!-- အဆင့် ၂: ပိုငွေ -->
+                <div class="rm-card surplus fade-up">
                     <div class="rm-label">လက်ကျန် (ပိုငွေ)</div>
                     <div class="rm-amount">၉၀၀,၀၀၀ ကျပ်</div>
                 </div>
 
-                <!-- Animated Plus Sign -->
-                <div class="elegant-plus fade-up" style="animation-delay: 0.6s;">+</div>
+                <!-- ဆက်သွယ်သည့် အပေါင်းလက္ခဏာ ၂ -->
+                <div class="flow-line-plus fade-up">
+                    <div class="circle-plus">+</div>
+                </div>
 
-                <div class="rm-card vip-topup fade-up" style="animation-delay: 0.8s;">
+                <!-- အဆင့် ၃: ကိုပိုင် ထပ်ဆောင်းအလှူ -->
+                <div class="rm-card vip-topup fade-up">
                     <div style="font-size: 0.85em; color: #aaa;">💎 အထူးဂုဏ်ပြုမှတ်တမ်း</div>
                     <div style="font-size: 0.9em; margin-top: 10px; color: #e5d9f2; line-height: 1.5;">
                         ၁၃၈၉ ခုနှစ် ရန်ပုံငွေ ကျပ် (၁၀) သိန်း တိတိ ပြည့်သွားစေရန်အတွက် ထပ်မံဖြည့်တင်း လှူဒါန်းသူ
@@ -224,24 +248,43 @@
                     <div class="vip-amt-badge">၁၀၀,၀၀၀ ကျပ်</div>
                 </div>
 
-                <!-- Animated Down Arrow -->
-                <div class="elegant-arrow-down fade-up" style="animation-delay: 1.0s;"></div>
+                <!-- ဆက်သွယ်သည့် ချိတ်ဆက်လိုင်း ၃ -->
+                <div class="flow-line fade-up">
+                    <div class="stem"></div>
+                    <div class="arrowhead"></div>
+                </div>
 
-                <div class="rm-card surplus fade-up" style="animation-delay: 1.2s;">
+                <!-- အဆင့် ၄: မူတည်ရန်ပုံငွေ ၁၀ သိန်း -->
+                <div class="rm-card surplus fade-up">
                     <div class="rm-label">၁၃၈၉ ခုနှစ်အတွက် မူတည်ရန်ပုံငွေ</div>
                     <div class="rm-amount">၁,၀၀၀,၀၀၀ ကျပ်</div>
                 </div>
 
-                <div class="arrow-grow fade-up" style="animation-delay: 1.4s;">
-                    📈 ၁ နှစ်စာ ၂.၅% အတိုးဖြင့် တိုးပွားမည့်စနစ်
+                <!-- ဆက်သွယ်သည့် အတိုးလိုင်း ၄ -->
+                <div class="flow-line fade-up" style="height: 30px;">
+                    <div class="stem" style="height: 20px;"></div>
+                    <div class="arrowhead"></div>
                 </div>
 
-                <div class="rm-card target-card fade-up" style="animation-delay: 1.6s;">
-                    <div style="color: #ffaa00; font-weight: bold; font-size: 1.1em;">လာမည့် ၁၃၈၉ ခုနှစ် ပွဲတော်အတွက်</div>
-                    <div style="color: #fff; font-size: 0.9em; margin-top: 5px;">ရန်ပုံငွေ လျာထားချက်</div>
+                <div class="growth-badge-container fade-up">
+                    <div class="growth-badge">
+                        📈 ၁ နှစ်စာ ၂.၅% အတိုးဖြင့် တိုးပွားမည့်စနစ်
+                    </div>
+                </div>
+
+                <div class="flow-line fade-up" style="height: 30px;">
+                    <div class="stem" style="height: 20px;"></div>
+                    <div class="arrowhead"></div>
+                </div>
+
+                <!-- အဆင့် ၅: ရရှိလာမည့် ရန်ပုံငွေ (ပြင်ဆင်ချက်အတိုင်း) -->
+                <div class="rm-card target-card fade-up">
+                    <div style="color: #ffdf00; font-weight: bold; font-size: 1.15em; line-height: 1.5;">
+                        လာမည့် ၁၃၈၉ ခုနှစ် ပွဲတော်တွင်<br>ရရှိလာမည့် ရန်ပုံငွေ
+                    </div>
                     <div class="rm-amount">၁,၂၅၀,၀၀၀ ကျပ်</div>
                     <div class="interest-note">
-                        (၁၀ သိန်းရင်း + ၁ နှစ်စာ ၂.၅% အတိုး)
+                        (၁၀ သိန်းအရင်း + ၂.၅% အတိုး)
                     </div>
                 </div>
 
@@ -252,7 +295,6 @@
     </div>
 
     <script>
-        // --- View Switcher ---
         function switchTab(tab) {
             document.getElementById('btn-donations').className = 'tab-btn' + (tab === 'donations' ? ' active' : '');
             document.getElementById('btn-roadmap').className = 'tab-btn' + (tab === 'roadmap' ? ' active' : '');
@@ -261,7 +303,6 @@
             document.getElementById('view-roadmap').style.display = (tab === 'roadmap') ? 'block' : 'none';
         }
 
-        // --- Supabase Data Loading for Donations Tab ---
         const SUPABASE_URL = 'https://oqulntrmixnlgbkkryhk.supabase.co';
         const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9xdWxudHJtaXhubGdia2tyeWhrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTE1MDcyMDcsImV4cCI6MjEwNzA4MzIwN30.t-BNmpxLySUBG052Tmisnc-FcXv6BEIyVBpU-R_rDeo';
         const dbClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
@@ -349,7 +390,7 @@
         loadDonations();
         setInterval(loadDonations, 3000);
 
-        // --- Background Animations ---
+        // --- Lanterns & Fireworks ---
         const lanternContainer = document.getElementById('lanterns');
         for(let i=0; i<12; i++) {
             let l = document.createElement('div');
@@ -386,7 +427,6 @@
         }
         animateFireworks();
 
-        // --- Visitor Tracking ---
         if (!localStorage.getItem('visited_padaukkhin')) {
             fetch('https://padaukkhin.pythonanywhere.com/track_visit').catch(e => {});
             localStorage.setItem('visited_padaukkhin', 'true');
